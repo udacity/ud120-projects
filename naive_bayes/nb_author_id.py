@@ -9,6 +9,8 @@
     Sara has label 0
     Chris has label 1
 
+    This code is updated by raymond on Jan30 2015
+
 """
     
 import sys
