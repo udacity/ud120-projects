@@ -13,7 +13,7 @@
     
 import sys
 from time import time
-sys.path.append("../tools/")
+sys.path.append("~/Documents/WorkSpace/MLProject/tools/")
 from email_preprocess import preprocess
 
 
@@ -23,12 +23,17 @@ from email_preprocess import preprocess
 features_train, features_test, labels_train, labels_test = preprocess()
 
 
-
-
 #########################################################
 ### your code goes here ###
 
+from sklearn.metrics import accuracy_score
+from sklearn.naive_bayes import GaussianNB
+gnb = GaussianNB()
+pred = gnb.fit(features_train, labels_train).predict(features_test)
+
+acc = accuracy_score(labels_test, pred)
 
 #########################################################
 
+print(round(acc, 3))
 
