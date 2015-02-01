@@ -28,13 +28,42 @@ plt.show()
 #################################################################################
 
 
-### your code here!  name your classifier object clf if you want the 
+### your code here!  name your classifier object clf if you want the
 ### visualization code (prettyPicture) to show you the decision boundary
+from time import time
+
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.naive_bayes import GaussianNB
+from sklearn.svm import SVC
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score
 
 
+# Classifier list
+classifers_dict = {'AdaBoost': AdaBoostClassifier(n_estimators=100,
+                                                  learning_rate=1),
+                    'Random Forest': RandomForestClassifier(n_estimators=10,
+                                                            # max_depth=None,
+                                                            min_samples_split=50,
+                                                            random_state=0),
+                    'Naive Bayes': GaussianNB(),
+                    'SVM': SVC(C=1, kernel='poly', degree=2, gamma=0.),
+                    'Tree': DecisionTreeClassifier(),
+                    'KNN': KNeighborsClassifier(n_neighbors=20, weights='distance', p=3)
+                    }
 
 
+for name, clf in classifers_dict.iteritems():
+    print name
+    t0 = time()
+    clf.fit(features_train, labels_train)
+    print "\tTime to train: ", time() - t0, "s"
 
+    pred = clf.predict(features_test)
+    acc = accuracy_score(labels_test, pred)
+    print "\tPrediction accuracy: ", acc
 
 
 
