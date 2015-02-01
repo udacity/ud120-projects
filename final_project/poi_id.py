@@ -43,15 +43,15 @@ labels, features = targetFeatureSplit(data)
 
 ### machine learning goes here!
 ### please name your classifier clf for easy export below
+from sklearn import naive_bayes
 
-clf = None    ### get rid of this line!  just here to keep code from crashing out-of-box
+clf = naive_bayes.GaussianNB()    ### get rid of this line!  just here to keep code from crashing out-of-box
+
+clf.fit(features, labels)
 
 
-### dump your classifier, dataset and features_list so 
+### dump your classifier, dataset and features_list so
 ### anyone can run/check your results
 pickle.dump(clf, open("my_classifier.pkl", "w") )
 pickle.dump(data_dict, open("my_dataset.pkl", "w") )
 pickle.dump(features_list, open("my_feature_list.pkl", "w") )
-
-
-
