@@ -45,7 +45,7 @@ labels, features = targetFeatureSplit(data)
 ### please name your classifier clf for easy export below
 from sklearn import naive_bayes
 
-clf = naive_bayes.GaussianNB()    ### get rid of this line!  just here to keep code from crashing out-of-box
+clf = naive_bayes.GaussianNB()
 
 clf.fit(features, labels)
 

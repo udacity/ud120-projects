@@ -10,7 +10,7 @@ from sklearn.feature_selection import SelectPercentile, f_classif
 
 
 def preprocess(words_file = "../tools/word_data.pkl", authors_file="../tools/email_authors.pkl"):
-    """ 
+    """
         this function takes a pre-made list of email texts (by default word_data.pkl)
         and the corresponding authors (by default email_authors.pkl) and performs
         a number of preprocessing steps:
@@ -44,7 +44,7 @@ def preprocess(words_file = "../tools/word_data.pkl", authors_file="../tools/ema
 
 
 
-    ### feature selection, because text is super high dimensional and 
+    ### feature selection, because text is super high dimensional and
     ### can be really computationally chewy as a result
     selector = SelectPercentile(f_classif, percentile=10)
     selector.fit(features_train_transformed, labels_train)
