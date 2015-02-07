@@ -2,6 +2,7 @@
 
 import pickle
 import numpy
+import pandas as pd
 
 from sklearn import cross_validation
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -55,5 +56,11 @@ def preprocess(words_file="../tools/word_data.pkl", authors_file="../tools/email
     ### info on the data
     print("no. of Chris training emails:", sum(labels_train))
     print("no. of Sara training emails:", len(labels_train) - sum(labels_train))
+
+    # df_train = pd.DataFrame({'features': features_train, 'labels': labels_train})
+    # df_test = pd.DataFrame({'features': features_test, 'labels': labels_test})
+    #
+    # df_train.to_csv('data/features_train.csv')
+    # df_test.to_csv('data/features_test.csv')
 
     return features_train_transformed, features_test_transformed, labels_train, labels_test
