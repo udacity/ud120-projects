@@ -50,7 +50,7 @@ for name, from_person in [("sara", from_sara), ("chris", from_chris)]:
 
             ### use str.replace() to remove any instances of the words
             ### ["sara", "shackleton", "chris", "germani"]
-            stop_words = ["sara", "shackleton", "chris", "germani"]
+            stop_words = ["sara", "shackleton", "chris", "germani", "sshacklensf", "cgermannsf", "houectect"]
 
             for w in stop_words:
                 content = content.replace(w, "")
@@ -64,8 +64,6 @@ for name, from_person in [("sara", from_sara), ("chris", from_chris)]:
                 from_data.append(1)
 
             ### append a 0 to from_data if email is from Sara, and 1 if email is from Chris
-
-
             email.close()
 
 
@@ -85,4 +83,4 @@ vectorizer = TfidfVectorizer(stop_words="english")
 
 vectorizer.fit_transform(word_data)
 print "#feature names: ", len(vectorizer.get_feature_names())
-print vectorizer.get_feature_names()[34590:34600]
+print vectorizer.get_feature_names()[33614]

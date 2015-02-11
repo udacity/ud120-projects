@@ -6,8 +6,8 @@ numpy.random.seed(42)
 
 
 ### the words (features) and authors (labels), already largely processed
-words_file = "word_data_overfit.pkl" ### like the file you made in the last mini-project 
-authors_file = "email_authors_overfit.pkl"  ### this too
+words_file = "../text_learning/your_word_data.pkl" ### like the file you made in the last mini-project
+authors_file = "../text_learning/your_email_authors.pkl"  ### this too
 word_data = pickle.load( open(words_file, "r"))
 authors = pickle.load( open(authors_file, "r") )
 
@@ -34,6 +34,21 @@ labels_train   = labels_train[:150]
 
 
 ### your code goes here
+from sklearn import tree
+from sklearn.metrics import accuracy_score
 
+clf = tree.DecisionTreeClassifier(min_samples_split=40)
 
+clf.fit(features_train, labels_train)
+pred = clf.predict(features_test)
 
+acc = accuracy_score(labels_test, pred)
+print "Accuracy: ", acc
+
+print clf.feature_importances_.argmax()
+print vectorizer.get_feature_names()[clf.feature_importances_.argmax()]
+
+for counter, importance in enumerate(clf.feature_importances_):
+    if importance > 0.2:
+        print "Counter and importance ", counter, " - ", importance, " ", vectorizer.get_feature_names()[counter]
+###########################
