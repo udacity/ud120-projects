@@ -23,8 +23,24 @@ from email_preprocess import preprocess
 features_train, features_test, labels_train, labels_test = preprocess()
 
 
+from sklearn.naive_bayes import GaussianNB
 
+clf=GaussianNB()
+print()
+import time
+t = time.time()
+clf.fit(features_train[0:10000], labels_train[0:10000])
+print(time.time()-t)
+t2=time.time()
+ans = clf.predict(features_test)
+print(t2-time.time())
+length = float(len(features_test))
+count=0
+for i in range(len(ans)):
+    if ans[i] == labels_test[i]:
+        count+=1
 
+print (count/length)
 #########################################################
 ### your code goes here ###
 
