@@ -12,6 +12,8 @@
     
 import sys
 from time import time
+from sklearn.svm import SVC
+
 sys.path.append("../tools/")
 from email_preprocess import preprocess
 
@@ -20,7 +22,6 @@ from email_preprocess import preprocess
 ### and testing datasets, respectively
 ### labels_train and labels_test are the corresponding item labels
 features_train, features_test, labels_train, labels_test = preprocess()
-
 
 
 
