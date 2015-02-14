@@ -24,20 +24,7 @@ from email_preprocess import preprocess
 features_train, features_test, labels_train, labels_test = preprocess()
 
 
-for j in [10000.0]:
-    t= SVC(kernel="rbf",C=j)
 
-    t= t.fit(features_train[:10000],labels_train[:10000])
-
-    ans = t.predict(features_test)
-    print 1
-    deno = len(ans)
-    count=0.0
-    for i in range(len(features_test)):
-        if ans[i] == labels_test[i]:
-            count+=1
-
-    print(count/deno , j)
 #########################################################
 ### your code goes here ###
 
