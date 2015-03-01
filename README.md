@@ -15,3 +15,14 @@ The interesting and hard part of the dataset is that it's very skewed, given tha
 
 
 ## What is going on
+
+
+
+
+## Machine Learning
+
+### Logistic Regression
+
+### Linear SVC
+    
+### LDA
