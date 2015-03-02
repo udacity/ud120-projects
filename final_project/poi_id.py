@@ -31,6 +31,7 @@ poi = ["poi"]
 ### feature of constant communication between POI's
 features_email = [
                 "poi_ratio_messages",
+    
                 "from_messages",
                 "from_poi_to_this_person",
                 "from_this_person_to_poi",
@@ -53,7 +54,12 @@ features_financial = [
                 "restricted_stock_deferred",
                 "salary",
                 "total_payments",
-                "total_stock_value"
+                "total_stock_value",
+    
+                # Log Feats
+#                "total_payments_log",
+#                "bonus_log",
+#                "total_stock_value_log"
                 ]
 
 features_list = poi + features_email + features_financial
@@ -76,13 +82,11 @@ def load_preprocess_data():
     
     return data_dict
         
-def add_features(data_dict, features_list, financial_log=False):
+def add_features(data_dict, features_list, financial_log=True):
     """
     Given the data dictionary of people with features, adds some features to 
     
     """
-    
-    
     for name in data_dict:
         
         # Add ratio of POI messages to total.
@@ -102,8 +106,7 @@ def add_features(data_dict, features_list, financial_log=False):
                 try:
                     data_dict[name][feat + '_log'] = log(data_dict[name][feat])
                 except:
-                    data_dict[name][feat + '_log'] = 'NaN'
-        
+                    data_dict[name][feat + '_log'] = 'NaN'        
     return data_dict
 
 
@@ -185,22 +188,22 @@ def setup_clf_list():
 
     #
     clf_tree = DecisionTreeClassifier()
-    params_tree = {}
+    params_tree = {"min_samples_split":[2, 5, 10], "criterion": ('gini', 'entropy')}
     clf_list.append( (clf_tree, params_tree) )
 
     #
     clf_linearsvm = LinearSVC()
-    params_linearsvm = {}
+    params_linearsvm = {"C": [0.5, 1, 5, 10, 100]}
     clf_list.append( (clf_linearsvm, params_linearsvm) )
 
     #
     clf_adaboost = AdaBoostClassifier()
-    params_adaboost = {}
+    params_adaboost = {"n_estimators":[20, 50, 100]}
     clf_list.append( (clf_adaboost, params_adaboost) )
 
     #
     clf_random_tree = RandomForestClassifier()
-    params_random_tree = {}
+    params_random_tree = {"n_estimators":[5, 10, 20, 100], "criterion": ('gini', 'entropy')}
     clf_list.append( (clf_random_tree, params_random_tree) )
 
     #
@@ -210,12 +213,12 @@ def setup_clf_list():
 
     #
     clf_log = LogisticRegression()
-    params_log = {"C":[10**18], "tol": [10**-21]}
+    params_log = {"C":[1, 10, 10**2,10**5,10**10, 10**20]}
     clf_list.append( (clf_log, params_log) )
 
     #
     clf_lda = LDA()
-    params_lda = {}
+    params_lda = {"n_components":[2,3,4,5]}
     clf_list.append( (clf_lda, params_lda) )
     
     #
@@ -349,7 +352,7 @@ def main():
     
     # import build_email_features
     data_dict = load_preprocess_data()
-    data_dict = add_features(data_dict, features_list)
+    data_dict = add_features(data_dict, features_list, financial_log=False)
 
     ### if you are creating any new features, you might want to do that here
     ### store to my_dataset for easy export below
@@ -359,7 +362,7 @@ def main():
     ### and extract them from data_dict, returning a numpy array
     data = featureFormat(my_dataset, features_list)
     
-    data = get_pca_features(data, email_components=1, financial_components=2)
+    data = get_pca_features(data, email_components=2, financial_components=4)
     
     ### split into labels and features (this line assumes that the first
     ### feature in the array is the label, which is why "poi" must always
@@ -369,11 +372,11 @@ def main():
     
     # Another way to run the code for 1 iteration.
 #    #### Split data into training and test sets
-#    features_train, features_test, labels_train, labels_test = train_test_split(features, labels, test_size=0.30)
-#    
+    features_train, features_test, labels_train, labels_test = train_test_split(features, labels, test_size=0.30)
+    
 #    ### ML
 #    clf_list = train_clf(features_train, labels_train)
-#    
+    
 ##    clf_evaluated = evaluate_clf_list(clf_list, features_test, labels_test)
 ##    print clf_evaluated
 #    return clf_evaluated[0][0], data_dict
@@ -386,10 +389,12 @@ def main():
     return ordered_list, summary_list, data_dict
 
 ordered_list, summary_list, data_dict = main()
+print ordered_list
+
 clf = ordered_list[0]
-f1_score = summary_list[clf][0]
+scores = summary_list[clf]
 print "Best classifier is ", clf
-print "With F1 score of: ", f1_score
+print "With scores of f1, recall, precision: ", scores
 
 
 ### dump your classifier, dataset and features_list so
