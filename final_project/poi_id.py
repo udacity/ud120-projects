@@ -400,7 +400,6 @@ features = scale_features(features)
 
 ordered_list, summary_list = evaluation_loop(features, labels, num_iters=100, test_size=0.3)
 
-ordered_list, summary_list, data_dict = main()
 # print ordered_list
 # print "*"*100
 # print summary_list
