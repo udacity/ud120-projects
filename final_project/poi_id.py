@@ -21,6 +21,8 @@ from sklearn.metrics import precision_score
 
 from sklearn.pipeline import Pipeline
 
+from sklearn.decomposition import PCA
+
 from sklearn.naive_bayes import GaussianNB
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.svm import LinearSVC
@@ -44,14 +46,14 @@ poi = ["poi"]
 ### feature of constant communication between POI's
 features_email = [
                 "poi_ratio_messages",
-    
+
                 "from_messages",
                 "from_poi_to_this_person",
                 "from_this_person_to_poi",
                 "shared_receipt_with_poi",
                 "to_messages"]
-                 
-    
+
+
 ### Financial features might have underlying features of bribe money
 features_financial = [
                 "bonus",
@@ -68,9 +70,9 @@ features_financial = [
                 "salary",
                 "total_payments",
                 "total_stock_value",
-    
+
                 # Log Feats
-#                "total_payments_log",
+               "total_payments_log",
 #                "salary_log",
 #                "bonus_log",
 #                "total_stock_value_log"
@@ -78,31 +80,31 @@ features_financial = [
 
 features_list = poi + features_email + features_financial
 
-    
+
 def load_preprocess_data():
     """
-    Loads and removes outliers from the dataset. Returns the data as a 
+    Loads and removes outliers from the dataset. Returns the data as a
     Python dictionary.
     """
-    
+
     ### load the dictionary containing the dataset
     data_dict = pickle.load(open("final_project_dataset.pkl", "r") )
-    
+
     ### reoving outliers
     outliers = ['TOTAL', 'THE TRAVEL AGENCY IN THE PARK']
     # 'LOCKHART EUGENE E' all values are NaN
     for outlier in outliers:
         data_dict.pop(outlier, 0)
-    
+
     return data_dict
-        
+
 def add_features(data_dict, features_list, financial_log=True):
     """
-    Given the data dictionary of people with features, adds some features to 
-    
+    Given the data dictionary of people with features, adds some features to
+
     """
     for name in data_dict:
-        
+
         # Add ratio of POI messages to total.
         try:
             total_messages = data_dict[name]['from_messages'] + data_dict[name]['to_messages']
@@ -113,14 +115,14 @@ def add_features(data_dict, features_list, financial_log=True):
             data_dict[name]['poi_ratio_messages'] = poi_ratio
         except:
             data_dict[name]['poi_ratio_messages'] = 'NaN'
-        
+
         # If feature is financial, add another variable with log transformation.
         if financial_log:
             for feat in features_financial:
                 try:
                     data_dict[name][feat + '_log'] = log(data_dict[name][feat])
                 except:
-                    data_dict[name][feat + '_log'] = 'NaN'        
+                    data_dict[name][feat + '_log'] = 'NaN'
     return data_dict
 
 
@@ -129,7 +131,7 @@ def get_pca_features(data, email_components=1, financial_components=2):
     Function calculates PCA for email and financial features sep.
     """
     from sklearn.decomposition import RandomizedPCA
-    
+
     # Separate the POI and newly calculates features
     initial_feature = data[:, [0,1]]
 
@@ -148,7 +150,7 @@ def get_pca_features(data, email_components=1, financial_components=2):
     from numpy import c_
     pca_features = c_[features_finance_pca, features_email_pca]
     data = c_[initial_feature, pca_features]
-    
+
     return data
 
 
@@ -156,12 +158,12 @@ def scale_features(features):
     """
     Split and scale features. Returns two Numpy nd arrays, labels and features.
     """
-    
+
     # scale features via min-max
     from sklearn import preprocessing
     scaler = preprocessing.MinMaxScaler()
     features = scaler.fit_transform(features)
-    
+
     return features
 
 
@@ -180,9 +182,11 @@ def setup_clf_list():
     """
     Instantiates all classifiers of interstes to be used.
     """
-    
     # List of tuples of a classifier and its parameters.
     clf_list = []
+
+    # pca = PCA()
+    # params_pca = {"n_components": [2,3,4,5,6], "whiten":(True)}
 
     #
     clf_naive = GaussianNB()
@@ -206,7 +210,7 @@ def setup_clf_list():
 
     #
     clf_random_tree = RandomForestClassifier()
-    params_random_tree = {"n_estimators":[5, 10, 20, 100], "criterion": ('gini', 'entropy')}
+    params_random_tree = {"n_estimators":[2], "criterion": ('gini', 'entropy')}
     clf_list.append( (clf_random_tree, params_random_tree) )
 
     #
@@ -220,17 +224,18 @@ def setup_clf_list():
     clf_list.append( (clf_log, params_log) )
 
     #
-    clf_lda = LDA()
-    params_lda = {"n_components":[1, 2,3,4,5]}
+    clf_lda = LDA(n_components=2)
+    params_lda = {}
+    # "n_components":[1, 2, 3, 4, 5]
     clf_list.append( (clf_lda, params_lda) )
-    
+
     #
     logistic = LogisticRegression()
     rbm = BernoulliRBM(n_components=2)
     clf_rbm = Pipeline(steps=[('rbm', rbm), ('logistic', logistic)])
     params_rbm = {}
     clf_list.append( (clf_rbm, params_rbm) )
-    
+
     return clf_list
 
 
@@ -238,13 +243,13 @@ def setup_clf_list():
 def optimize_clf(clf, params, features_train, labels_train, optimize=False):
     """
     Given a classifier and its parameters, uses GridSearchCV to
-    find the optimal parameters. Returns 
+    find the optimal parameters. Returns
     """
-    
+
 #    print "*"*40
 #    print "Fitting the classifier to the training set"
 #    print clf
-    
+
 #    t0 = time()
     if optimize:
         clf = GridSearchCV(clf, params)
@@ -257,7 +262,7 @@ def optimize_clf(clf, params, features_train, labels_train, optimize=False):
 #    print "Best estimator found by grid search:"
 #    print clf.best_estimator_
 #    print "*"*40
-    
+
     return clf
 
 
@@ -266,41 +271,41 @@ def optimize_clf_list(clf_list, features_train, labels_train):
     Takes a list of tuples for classifiers and parameters, and returns
     a list of the best estimator optimized to it's given parameters.
     """
-    
+
     best_estimators = []
     for clf, params in clf_list:
         clf_optimized = optimize_clf(clf, params, features_train, labels_train)
         best_estimators.append( clf_optimized )
-    
+
     return best_estimators
 
 def train_unsupervised_clf(features_train, labels_train):
     """
     """
-    
+
     clf_kmeans = KMeans(n_clusters=2, tol=0.001)
     clf_kmeans.fit( features_train )
-    
+
     return [clf_kmeans]
 
 def train_clf(features_train, labels_train):
     """
     """
-    
+
     clf_supervised = setup_clf_list()
     clf_supervised = optimize_clf_list(clf_supervised, features_train, labels_train)
-    
+
     clf_unsupervised = train_unsupervised_clf(features_train, labels_train)
-    
+
     return clf_supervised + clf_unsupervised
-    
+
 
 
 ###############################################################################
 # Quantitative evaluation of the model quality on the test set
 
 def evaluate_clf(clf, features_test, labels_test):
-    
+
 #    print "\nPredicting the people names on the testing set"
 #    print clf
 #    t0 = time()
@@ -308,19 +313,19 @@ def evaluate_clf(clf, features_test, labels_test):
 #    print "done in %0.3fs" % (time() - t0)
 
 #    print classification_report(labels_test, labels_pred)
-    
+
     f1 = f1_score(labels_test, labels_pred)
     recall = recall_score(labels_test, labels_pred)
     precision = precision_score(labels_test, labels_pred)
     return f1, recall, precision
 
 def evaluate_clf_list(clf_list, features_test, labels_test):
-    
+
     clf_with_scores = []
     for clf in clf_list:
         f1, recall, precision = evaluate_clf(clf, features_test, labels_test)
         clf_with_scores.append( (clf, f1, recall, precision) )
-        
+
 #    orederd_clf = sorted(clf_with_scores, key = lambda tup: tup[1], reverse=True)
     return clf_with_scores
 
@@ -328,11 +333,11 @@ def evaluate_clf_list(clf_list, features_test, labels_test):
 def evaluation_loop(features, labels, num_iters=1000, test_size=0.3):
     """
     Run evaluation metrics multiple times, exactly iteration_count, so as to
-    get a better idea of which classifier is doing better with different 
+    get a better idea of which classifier is doing better with different
     data splits.
     """
     from numpy import asarray
-    
+
     evaluation_matrix = [[] for n in range(10)]
     for i in range(num_iters):
 
@@ -345,68 +350,66 @@ def evaluation_loop(features, labels, num_iters=1000, test_size=0.3):
         for i, clf in enumerate(clf_list):
             scores = evaluate_clf(clf, features_test, labels_test)
             evaluation_matrix[i].append(scores)
-    
+
     # Make a copy of the classifications list. Just want the structure.
     summary_list = {}
     for i, col in enumerate(evaluation_matrix):
         summary_list[clf_list[i]] = ( sum(asarray(col)) )
-    
+
 #    print summary_list
     ordered_list = sorted(summary_list.keys() , key = lambda k: summary_list[k][0], reverse=True)
     return ordered_list, summary_list
-    
-def main():
-    
-    # import build_email_features
-    data_dict = load_preprocess_data()
-    data_dict = add_features(data_dict, features_list, financial_log=False)
 
-    ### if you are creating any new features, you might want to do that here
-    ### store to my_dataset for easy export below
-    my_dataset = data_dict
 
-    ### these two lines extract the features specified in features_list
-    ### and extract them from data_dict, returning a numpy array
-    data = featureFormat(my_dataset, features_list)
-    
-    data = get_pca_features(data, email_components=3, financial_components=5)
-    
-    ### split into labels and features (this line assumes that the first
-    ### feature in the array is the label, which is why "poi" must always
-    ### be first in features_list
-    labels, features = targetFeatureSplit(data)
-    features = scale_features(features)
-    
-    # Another way to run the code for 1 iteration.
-    #### Split data into training and test sets
+# import build_email_features
+data_dict = load_preprocess_data()
+data_dict = add_features(data_dict, features_list, financial_log=True)
+
+### if you are creating any new features, you might want to do that here
+### store to my_dataset for easy export below
+my_dataset = data_dict
+
+### these two lines extract the features specified in features_list
+### and extract them from data_dict, returning a numpy array
+data = featureFormat(my_dataset, features_list)
+
+# Here I was reducing pca features, and into two groups. At the end, it was not
+# used given that it did not help performance.
+# data = get_pca_features(data, email_components=3, financial_components=5)
+
+### split into labels and features (this line assumes that the first
+### feature in the array is the label, which is why "poi" must always
+### be first in features_list
+labels, features = targetFeatureSplit(data)
+features = scale_features(features)
+
+# Another way to run the code for 1 iteration.
+
+#***********************************************************************#
+#### Split data into training and test sets
 #    features_train, features_test, labels_train, labels_test = train_test_split(features, labels, test_size=0.30)
-    
-    ### ML
+
+### ML
 #    clf_list = train_clf(features_train, labels_train)
-    
+
 #    clf_evaluated = evaluate_clf_list(clf_list, features_test, labels_test)
 #    print clf_evaluated
 #    return clf_evaluated[0][0], data_dict
+#***********************************************************************#
 
 
-    ordered_list, summary_list = evaluation_loop(features, labels, num_iters=100, test_size=0.3)
-#    print ordered_list
-#    print summary_list
-
-    return ordered_list, summary_list, data_dict
+ordered_list, summary_list = evaluation_loop(features, labels, num_iters=100, test_size=0.3)
 
 ordered_list, summary_list, data_dict = main()
-#print ordered_list
-#print "*"*100
-#print summary_list
-#print "*"*100
-#
-#clf = ordered_list[0]
-#scores = summary_list[clf]
-#print "Best classifier is ", clf
-#print "With scores of f1, recall, precision: ", scores
+# print ordered_list
+# print "*"*100
+# print summary_list
+# print "*"*100
 
-clf = KMeans(n_clusters=2, tol=0.001)
+clf = ordered_list[0]
+scores = summary_list[clf]
+print "Best classifier is ", clf
+print "With scores of f1, recall, precision: ", scores
 
 
 ### dump your classifier, dataset and features_list so
