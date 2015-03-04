@@ -19,6 +19,19 @@ from sklearn.metrics import f1_score
 from sklearn.metrics import recall_score
 from sklearn.metrics import precision_score
 
+from sklearn.pipeline import Pipeline
+
+from sklearn.naive_bayes import GaussianNB
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.svm import LinearSVC
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.lda import LDA
+from sklearn.neural_network import BernoulliRBM
+
+from sklearn.cluster import KMeans
 """
 Features
 """
@@ -58,6 +71,7 @@ features_financial = [
     
                 # Log Feats
 #                "total_payments_log",
+#                "salary_log",
 #                "bonus_log",
 #                "total_stock_value_log"
                 ]
@@ -166,17 +180,6 @@ def setup_clf_list():
     """
     Instantiates all classifiers of interstes to be used.
     """
-    from sklearn.pipeline import Pipeline
-    
-    from sklearn.naive_bayes import GaussianNB
-    from sklearn.tree import DecisionTreeClassifier
-    from sklearn.svm import LinearSVC
-    from sklearn.ensemble import AdaBoostClassifier
-    from sklearn.ensemble import RandomForestClassifier
-    from sklearn.neighbors import KNeighborsClassifier
-    from sklearn.linear_model import LogisticRegression
-    from sklearn.lda import LDA
-    from sklearn.neural_network import BernoulliRBM
     
     # List of tuples of a classifier and its parameters.
     clf_list = []
@@ -188,7 +191,7 @@ def setup_clf_list():
 
     #
     clf_tree = DecisionTreeClassifier()
-    params_tree = {"min_samples_split":[2, 5, 10], "criterion": ('gini', 'entropy')}
+    params_tree = {"min_samples_split":[2, 5, 10, 20], "criterion": ('gini', 'entropy')}
     clf_list.append( (clf_tree, params_tree) )
 
     #
@@ -213,12 +216,12 @@ def setup_clf_list():
 
     #
     clf_log = LogisticRegression()
-    params_log = {"C":[1, 10, 10**2,10**5,10**10, 10**20]}
+    params_log = {"C":[0.05, 0.5, 1, 10, 10**2,10**5,10**10, 10**20]}
     clf_list.append( (clf_log, params_log) )
 
     #
     clf_lda = LDA()
-    params_lda = {"n_components":[2,3,4,5]}
+    params_lda = {"n_components":[1, 2,3,4,5]}
     clf_list.append( (clf_lda, params_lda) )
     
     #
@@ -232,7 +235,7 @@ def setup_clf_list():
 
 
 
-def optimize_clf(clf, params, features_train, labels_train):
+def optimize_clf(clf, params, features_train, labels_train, optimize=False):
     """
     Given a classifier and its parameters, uses GridSearchCV to
     find the optimal parameters. Returns 
@@ -243,15 +246,19 @@ def optimize_clf(clf, params, features_train, labels_train):
 #    print clf
     
 #    t0 = time()
-    clf = GridSearchCV(clf, params)
-    clf = clf.fit(features_train, labels_train)
-    
+    if optimize:
+        clf = GridSearchCV(clf, params)
+        clf = clf.fit(features_train, labels_train)
+        clf = clf.best_estimator_
+    else:
+        clf = clf.fit(features_train, labels_train)
+
 #    print "done in %0.3fs" % (time() - t0)
 #    print "Best estimator found by grid search:"
 #    print clf.best_estimator_
 #    print "*"*40
     
-    return clf.best_estimator_
+    return clf
 
 
 def optimize_clf_list(clf_list, features_train, labels_train):
@@ -270,7 +277,6 @@ def optimize_clf_list(clf_list, features_train, labels_train):
 def train_unsupervised_clf(features_train, labels_train):
     """
     """
-    from sklearn.cluster import KMeans
     
     clf_kmeans = KMeans(n_clusters=2, tol=0.001)
     clf_kmeans.fit( features_train )
@@ -345,6 +351,7 @@ def evaluation_loop(features, labels, num_iters=1000, test_size=0.3):
     for i, col in enumerate(evaluation_matrix):
         summary_list[clf_list[i]] = ( sum(asarray(col)) )
     
+#    print summary_list
     ordered_list = sorted(summary_list.keys() , key = lambda k: summary_list[k][0], reverse=True)
     return ordered_list, summary_list
     
@@ -362,7 +369,7 @@ def main():
     ### and extract them from data_dict, returning a numpy array
     data = featureFormat(my_dataset, features_list)
     
-    data = get_pca_features(data, email_components=2, financial_components=4)
+    data = get_pca_features(data, email_components=3, financial_components=5)
     
     ### split into labels and features (this line assumes that the first
     ### feature in the array is the label, which is why "poi" must always
@@ -371,14 +378,14 @@ def main():
     features = scale_features(features)
     
     # Another way to run the code for 1 iteration.
-#    #### Split data into training and test sets
-    features_train, features_test, labels_train, labels_test = train_test_split(features, labels, test_size=0.30)
+    #### Split data into training and test sets
+#    features_train, features_test, labels_train, labels_test = train_test_split(features, labels, test_size=0.30)
     
-#    ### ML
+    ### ML
 #    clf_list = train_clf(features_train, labels_train)
     
-##    clf_evaluated = evaluate_clf_list(clf_list, features_test, labels_test)
-##    print clf_evaluated
+#    clf_evaluated = evaluate_clf_list(clf_list, features_test, labels_test)
+#    print clf_evaluated
 #    return clf_evaluated[0][0], data_dict
 
 
@@ -389,12 +396,17 @@ def main():
     return ordered_list, summary_list, data_dict
 
 ordered_list, summary_list, data_dict = main()
-print ordered_list
+#print ordered_list
+#print "*"*100
+#print summary_list
+#print "*"*100
+#
+#clf = ordered_list[0]
+#scores = summary_list[clf]
+#print "Best classifier is ", clf
+#print "With scores of f1, recall, precision: ", scores
 
-clf = ordered_list[0]
-scores = summary_list[clf]
-print "Best classifier is ", clf
-print "With scores of f1, recall, precision: ", scores
+clf = KMeans(n_clusters=2, tol=0.001)
 
 
 ### dump your classifier, dataset and features_list so

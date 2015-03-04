@@ -55,6 +55,19 @@ For the analysis of the data, a total of 10 classifiers where tried out, includi
 All the supervised learning algorithms (9/10) where optimized using **GridSearchCV**. 
 
 ### Validation and Performance
+To validate the performance of each algorithm, recall, precision and F1 scores where used. Find below a summary of the scores.
 
+|Feature | F1 Score | Recall | Precision |
+|--------|----------|--------|-----------|
+|Logistic Regression |
+|Linear Discriminant Analysis |30.49659785|23.40992063|56.06666667|
+|Decision Tree Classifier |
+|Gaussian Naive Bayes |
+|Linear Support Vector Classifier |15.83910534|10.26785714|44.5|
+|AdaBoost |
+|Randome Forrest Tree Classifier |
+|K Nearest Neighbor |
+|KMeans |
+|Bernoulli RBM |
 
 ## Discussion and Conclusions
