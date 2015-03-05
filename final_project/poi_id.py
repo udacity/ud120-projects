@@ -47,25 +47,26 @@ poi = ["poi"]
 features_email = [
                 "poi_ratio_messages",
 
-                "from_messages",
-                "from_poi_to_this_person",
-                "from_this_person_to_poi",
-                "shared_receipt_with_poi",
-                "to_messages"]
+                # "from_messages",
+                # "from_poi_to_this_person",
+                # "from_this_person_to_poi",
+                # "shared_receipt_with_poi",
+                # "to_messages"
+                ]
 
 
 ### Financial features might have underlying features of bribe money
 features_financial = [
                 "bonus",
-                "deferral_payments",
-                "deferred_income",
-                "director_fees",
-                "exercised_stock_options",
-                "expenses",
-                "loan_advances",
-                "long_term_incentive",
-                "other",
-                "restricted_stock",
+                # "deferral_payments",
+                # "deferred_income",
+                # "director_fees",
+                # "exercised_stock_options",
+                # "expenses",
+                # # "loan_advances",
+                # "long_term_incentive",
+                # # "other",
+                # "restricted_stock",
                 "restricted_stock_deferred",
                 "salary",
                 "total_payments",
@@ -73,8 +74,8 @@ features_financial = [
 
                 # Log Feats
                "total_payments_log",
-#                "salary_log",
-#                "bonus_log",
+               "salary_log",
+            #    "bonus_log",
 #                "total_stock_value_log"
                 ]
 
@@ -400,10 +401,10 @@ features = scale_features(features)
 
 ordered_list, summary_list = evaluation_loop(features, labels, num_iters=100, test_size=0.3)
 
-# print ordered_list
-# print "*"*100
-# print summary_list
-# print "*"*100
+print ordered_list
+print "*"*100
+print summary_list
+print "*"*100
 
 clf = ordered_list[0]
 scores = summary_list[clf]
