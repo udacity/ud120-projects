@@ -15,6 +15,7 @@ from sklearn.grid_search import GridSearchCV
 from sklearn.cross_validation import train_test_split
 
 from sklearn.metrics import classification_report
+from sklearn.metrics import make_scorer
 from sklearn.metrics import f1_score
 from sklearn.metrics import recall_score
 from sklearn.metrics import precision_score
@@ -58,15 +59,15 @@ features_email = [
 ### Financial features might have underlying features of bribe money
 features_financial = [
                 "bonus",
-                # "deferral_payments",
-                # "deferred_income",
-                # "director_fees",
-                # "exercised_stock_options",
-                # "expenses",
-                # # "loan_advances",
-                # "long_term_incentive",
-                # # "other",
-                # "restricted_stock",
+                "deferral_payments",
+                "deferred_income",
+                "director_fees",
+                "exercised_stock_options",
+                "expenses",
+                "loan_advances",
+                "long_term_incentive",
+                "other",
+                "restricted_stock",
                 "restricted_stock_deferred",
                 "salary",
                 "total_payments",
@@ -190,9 +191,9 @@ def setup_clf_list():
     # params_pca = {"n_components": [2,3,4,5,6], "whiten":(True)}
 
     #
-    clf_naive = GaussianNB()
-    params_naive = {}
-    clf_list.append( (clf_naive, params_naive) )
+    # clf_naive = GaussianNB()
+    # params_naive = {}
+    # clf_list.append( (clf_naive, params_naive) )
 
     #
     clf_tree = DecisionTreeClassifier()
@@ -205,13 +206,13 @@ def setup_clf_list():
     clf_list.append( (clf_linearsvm, params_linearsvm) )
 
     #
-    clf_adaboost = AdaBoostClassifier()
-    params_adaboost = {"n_estimators":[20, 50, 100]}
-    clf_list.append( (clf_adaboost, params_adaboost) )
+    # clf_adaboost = AdaBoostClassifier()
+    # params_adaboost = {"n_estimators":[20, 50, 100]}
+    # clf_list.append( (clf_adaboost, params_adaboost) )
 
     #
     clf_random_tree = RandomForestClassifier()
-    params_random_tree = {"n_estimators":[2], "criterion": ('gini', 'entropy')}
+    params_random_tree = {"n_estimators":[2, 3, 5], "criterion": ('gini', 'entropy')}
     clf_list.append( (clf_random_tree, params_random_tree) )
 
     #
@@ -241,7 +242,7 @@ def setup_clf_list():
 
 
 
-def optimize_clf(clf, params, features_train, labels_train, optimize=False):
+def optimize_clf(clf, params, features_train, labels_train, optimize=True):
     """
     Given a classifier and its parameters, uses GridSearchCV to
     find the optimal parameters. Returns
@@ -253,7 +254,8 @@ def optimize_clf(clf, params, features_train, labels_train, optimize=False):
 
 #    t0 = time()
     if optimize:
-        clf = GridSearchCV(clf, params)
+        scorer = make_scorer(f1_score)
+        clf = GridSearchCV(clf, params, scoring=scorer)
         clf = clf.fit(features_train, labels_train)
         clf = clf.best_estimator_
     else:
@@ -339,7 +341,7 @@ def evaluation_loop(features, labels, num_iters=1000, test_size=0.3):
     """
     from numpy import asarray
 
-    evaluation_matrix = [[] for n in range(10)]
+    evaluation_matrix = [[] for n in range(8)]
     for i in range(num_iters):
 
         #### Split data into training and test sets
