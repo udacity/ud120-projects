@@ -1,12 +1,11 @@
 #!/usr/bin/python
 
-import matplotlib.pyplot as plt
 import sys
 import pickle
 sys.path.append("../tools/")
 
-from feature_format import featureFormat
-from feature_format import targetFeatureSplit
+from feature_format import featureFormat, targetFeatureSplit
+from tester import test_classifier, dump_classifier_and_data
 
 from numpy import log
 
@@ -51,7 +50,7 @@ features_email = [
                 # "from_messages",
                 # "from_poi_to_this_person",
                 # "from_this_person_to_poi",
-                # "shared_receipt_with_poi",
+                "shared_receipt_with_poi",
                 # "to_messages"
                 ]
 
@@ -59,26 +58,30 @@ features_email = [
 ### Financial features might have underlying features of bribe money
 features_financial = [
                 "bonus",
-                "deferral_payments",
+                # "deferral_payments",
                 "deferred_income",
-                "director_fees",
+                # "director_fees",
                 "exercised_stock_options",
-                "expenses",
+                # "expenses",
                 "loan_advances",
                 "long_term_incentive",
-                "other",
+                # "other",
                 "restricted_stock",
-                "restricted_stock_deferred",
+                # "restricted_stock_deferred",
                 "salary",
                 "total_payments",
                 "total_stock_value",
 
                 # Log Feats
-               "total_payments_log",
-               "salary_log",
+            #    "total_payments_log",
+            #    "salary_log",
             #    "bonus_log",
 #                "total_stock_value_log"
                 ]
+
+#TODO: Create another list of features fo selected features. That way i can have only log with non-log out.
+
+#TODO: Implement K-best
 
 features_list = poi + features_email + features_financial
 
@@ -100,7 +103,7 @@ def load_preprocess_data():
 
     return data_dict
 
-def add_features(data_dict, features_list, financial_log=True):
+def add_features(data_dict, features_list, financial_log=False):
     """
     Given the data dictionary of people with features, adds some features to
 
@@ -254,7 +257,7 @@ def optimize_clf(clf, params, features_train, labels_train, optimize=True):
 
 #    t0 = time()
     if optimize:
-        scorer = make_scorer(f1_score)
+        scorer = make_scorer(precision_score)
         clf = GridSearchCV(clf, params, scoring=scorer)
         clf = clf.fit(features_train, labels_train)
         clf = clf.best_estimator_
@@ -366,15 +369,14 @@ def evaluation_loop(features, labels, num_iters=1000, test_size=0.3):
 
 # import build_email_features
 data_dict = load_preprocess_data()
-data_dict = add_features(data_dict, features_list, financial_log=True)
+data_dict = add_features(data_dict, features_list, financial_log=False)
 
 ### if you are creating any new features, you might want to do that here
 ### store to my_dataset for easy export below
 my_dataset = data_dict
 
-### these two lines extract the features specified in features_list
-### and extract them from data_dict, returning a numpy array
-data = featureFormat(my_dataset, features_list)
+### Extract features and labels from dataset for local testing
+data = featureFormat(my_dataset, features_list, sort_keys = True)
 
 # Here I was reducing pca features, and into two groups. At the end, it was not
 # used given that it did not help performance.
@@ -401,21 +403,23 @@ features = scale_features(features)
 #***********************************************************************#
 
 
-ordered_list, summary_list = evaluation_loop(features, labels, num_iters=100, test_size=0.3)
+# ordered_list, summary_list = evaluation_loop(features, labels, num_iters=100, test_size=0.3)
+#
+# print ordered_list
+# print "*"*100
+# print summary_list
+# print "*"*100
+#
+# clf = ordered_list[0]
+# scores = summary_list[clf]
+# print "Best classifier is ", clf
+# print "With scores of f1, recall, precision: ", scores
 
-print ordered_list
-print "*"*100
-print summary_list
-print "*"*100
 
-clf = ordered_list[0]
-scores = summary_list[clf]
-print "Best classifier is ", clf
-print "With scores of f1, recall, precision: ", scores
+clf = LogisticRegression(C=10**18, tol=10**-21)
 
 
-### dump your classifier, dataset and features_list so
-### anyone can run/check your results
-pickle.dump(clf, open("my_classifier.pkl", "w") )
-pickle.dump(data_dict, open("my_dataset.pkl", "w") )
-pickle.dump(features_list, open("my_feature_list.pkl", "w") )
+### Dump your classifier, dataset, and features_list so
+### anyone can run/check your results.
+
+dump_classifier_and_data(clf, my_dataset, features_list)

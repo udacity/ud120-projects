@@ -1,9 +1,9 @@
 #!/usr/bin/python
 
-import pickle
-import sys
-import re
 import os
+import pickle
+import re
+import sys
 
 sys.path.append( "../tools/" )
 from parse_out_email_text import parseOutText
