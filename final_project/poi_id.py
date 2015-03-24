@@ -88,16 +88,16 @@ features_new = [
                 "bonus_log",
                 "total_stock_value_log",
                 "exercised_stock_options_log",
-                #
-                # # Power feats
-                #
-                "total_payments_power",
-                "total_stock_value_power",
-                "exercised_stock_options_power"
+
+                # squared feats
+                "total_payments_squared",
+                "total_stock_value_squared",
+                "exercised_stock_options_squared",
+                "salary_squared",
+
+
 ]
 
-
-#TODO: Implement K-best
 
 features_list = poi + features_email + features_financial + features_new
 
@@ -120,7 +120,7 @@ def load_preprocess_data():
 
     return data_dict
 
-def add_features(data_dict, features_list, financial_log=False, financial_power=False):
+def add_features(data_dict, features_list, financial_log=False, financial_squared=False):
     """
     Given the data dictionary of people with features, adds some features to
 
@@ -135,6 +135,7 @@ def add_features(data_dict, features_list, financial_log=False, financial_power=
                                     data_dict[name]["shared_receipt_with_poi"]
             poi_ratio = 1.* poi_related_messages / total_messages
             data_dict[name]['poi_ratio_messages'] = poi_ratio
+            data_dict[name]['poi_ratio_messages_squared'] = poi_ratio ** 2
         except:
             data_dict[name]['poi_ratio_messages'] = NAN_value
 
@@ -146,13 +147,13 @@ def add_features(data_dict, features_list, financial_log=False, financial_power=
                 except:
                     data_dict[name][feat + '_log'] = NAN_value
 
-        # Add power features
-        if financial_power:
+        # Add squared features
+        if financial_squared:
             for feat in features_financial:
                 try:
-                    data_dict[name][feat + '_power'] = Math.square(data_dict[name][feat]+1)
+                    data_dict[name][feat + '_squared'] = Math.square(data_dict[name][feat]+1)
                 except:
-                    data_dict[name][feat + '_power'] = NAN_value
+                    data_dict[name][feat + '_squared'] = NAN_value
 
     # print "finished"
     return data_dict
@@ -395,8 +396,8 @@ def evaluation_loop(features, labels, pca_pipeline=False, num_iters=1000, test_s
 # import build_email_features
 data_dict = load_preprocess_data()
 
-### To test financial_log and financial_power features, first turn them to True, then uncomment them up in features_new
-data_dict = add_features(data_dict, features_list, financial_log=True, financial_power=True)
+### To test financial_log and financial_squared features, first turn them to True, then uncomment them up in features_new
+data_dict = add_features(data_dict, features_list, financial_log=True, financial_squared=True)
 
 ### store to my_dataset for easy export below
 my_dataset = data_dict
@@ -411,17 +412,17 @@ labels, features = targetFeatureSplit(data)
 # features = scale_features(features)
 
 
-k = 15
-k_best = SelectKBest(k=k)
-k_best.fit(features, labels)
-
-scores = k_best.scores_
-unsorted_pairs = zip(features_list[1:], scores)
-sorted_pairs = list(reversed(sorted(unsorted_pairs, key=lambda x: x[1])))
-k_best_features = dict(sorted_pairs[:k])
-print "{0} best features: {1}\n".format(k, k_best_features.keys())
-
-features_list = poi + k_best_features.keys()
+# k = 25
+# k_best = SelectKBest(k=k)
+# k_best.fit(features, labels)
+#
+# scores = k_best.scores_
+# unsorted_pairs = zip(features_list[1:], scores)
+# sorted_pairs = list(reversed(sorted(unsorted_pairs, key=lambda x: x[1])))
+# k_best_features = dict(sorted_pairs[:k])
+# print "{0} best features: {1}\n".format(k, k_best_features.keys())
+#
+# features_list = poi + k_best_features.keys()
 
 
 
@@ -429,7 +430,7 @@ features_list = poi + k_best_features.keys()
 
 #
 ####### UNCOMMENT THIS LINE TO RUN FULL CODE ####### Takes a long time to run if pca_pipeline is True.
-# ordered_list, summary_list = evaluation_loop(features, labels, pca_pipeline = False, num_iters=100, test_size=0.3)
+# ordered_list, summary_list = evaluation_loop(features, labels, pca_pipeline = False, num_iters=10, test_size=0.3)
 
 # print ordered_list
 # print "*"*100
@@ -441,17 +442,16 @@ features_list = poi + k_best_features.keys()
 # print "Best classifier is ", clf
 # print "With scores of f1, recall, precision: ", scores
 
-clf_logistic = LogisticRegression(  C=10, class_weight=None, dual=False,
-                                    fit_intercept=True, intercept_scaling=1,
-                                    penalty='l2', random_state=None, tol=0.0001)
+clf_logistic = LogisticRegression(  C=10**20, penalty='l2', random_state=42, tol=10**-10, class_weight='auto')
 
 clf_lda = LDA(n_components=2)
-pca = PCA( n_components=8)
+
+pca = PCA(n_components=15)
 
 clf = Pipeline(steps=[("pca", pca), ("logistic", clf_logistic)])
 
 
-test_classifier(clf_logistic, my_dataset, features_list)
+test_classifier(clf, my_dataset, features_list)
 
 ### Dump your classifier, dataset, and features_list so
 ### anyone can run/check your results.
