@@ -8,6 +8,9 @@ from feature_format import featureFormat, targetFeatureSplit
 from tester import test_classifier, dump_classifier_and_data
 
 from numpy import log
+from numpy import sqrt
+from numpy import float64
+from numpy import nan
 
 from time import time
 from sklearn.grid_search import GridSearchCV
@@ -18,6 +21,9 @@ from sklearn.metrics import make_scorer
 from sklearn.metrics import f1_score
 from sklearn.metrics import recall_score
 from sklearn.metrics import precision_score
+
+from sklearn.feature_selection import SelectKBest
+from sklearn.feature_selection import chi2
 
 from sklearn.pipeline import Pipeline
 
@@ -45,46 +51,57 @@ poi = ["poi"]
 ### Separate list to apply PCA to each one. Emails looks for underlying
 ### feature of constant communication between POI's
 features_email = [
-                "poi_ratio_messages",
-
-                # "from_messages",
-                # "from_poi_to_this_person",
-                # "from_this_person_to_poi",
+                "from_messages",
+                "from_poi_to_this_person",
+                "from_this_person_to_poi",
                 "shared_receipt_with_poi",
-                # "to_messages"
+                "to_messages"
                 ]
 
 
 ### Financial features might have underlying features of bribe money
 features_financial = [
                 "bonus",
-                # "deferral_payments",
+                "deferral_payments",
                 "deferred_income",
-                # "director_fees",
+                "director_fees",
                 "exercised_stock_options",
-                # "expenses",
+                "expenses",
                 "loan_advances",
                 "long_term_incentive",
-                # "other",
+                "other",
                 "restricted_stock",
-                # "restricted_stock_deferred",
+                "restricted_stock_deferred",
                 "salary",
                 "total_payments",
-                "total_stock_value",
-
-                # Log Feats
-            #    "total_payments_log",
-            #    "salary_log",
-            #    "bonus_log",
-#                "total_stock_value_log"
+                "total_stock_value"
                 ]
 
-#TODO: Create another list of features fo selected features. That way i can have only log with non-log out.
+features_new = [
+
+                # Email
+                "poi_ratio_messages",
+
+                # Log Feats
+                "total_payments_log",
+                "salary_log",
+                "bonus_log",
+                "total_stock_value_log",
+                "exercised_stock_options_log",
+                #
+                # # Power feats
+                #
+                "total_payments_power",
+                "total_stock_value_power",
+                "exercised_stock_options_power"
+]
+
 
 #TODO: Implement K-best
 
-features_list = poi + features_email + features_financial
+features_list = poi + features_email + features_financial + features_new
 
+NAN_value = 'NaN'
 
 def load_preprocess_data():
     """
@@ -103,7 +120,7 @@ def load_preprocess_data():
 
     return data_dict
 
-def add_features(data_dict, features_list, financial_log=False):
+def add_features(data_dict, features_list, financial_log=False, financial_power=False):
     """
     Given the data dictionary of people with features, adds some features to
 
@@ -119,49 +136,57 @@ def add_features(data_dict, features_list, financial_log=False):
             poi_ratio = 1.* poi_related_messages / total_messages
             data_dict[name]['poi_ratio_messages'] = poi_ratio
         except:
-            data_dict[name]['poi_ratio_messages'] = 'NaN'
+            data_dict[name]['poi_ratio_messages'] = NAN_value
 
         # If feature is financial, add another variable with log transformation.
         if financial_log:
             for feat in features_financial:
                 try:
-                    data_dict[name][feat + '_log'] = log(data_dict[name][feat])
+                    data_dict[name][feat + '_log'] = Math.log(data_dict[name][feat] + 1)
                 except:
-                    data_dict[name][feat + '_log'] = 'NaN'
+                    data_dict[name][feat + '_log'] = NAN_value
+
+        # Add power features
+        if financial_power:
+            for feat in features_financial:
+                try:
+                    data_dict[name][feat + '_power'] = Math.square(data_dict[name][feat]+1)
+                except:
+                    data_dict[name][feat + '_power'] = NAN_value
+
+    # print "finished"
     return data_dict
 
 
-def get_pca_features(data, email_components=1, financial_components=2):
+def transform_pca_pipeline(clf_list):
     """
-    Function calculates PCA for email and financial features sep.
+    Function takes a classifier list and returns a list of piplines of the
+    same classifiers and PCA.
     """
-    from sklearn.decomposition import RandomizedPCA
 
-    # Separate the POI and newly calculates features
-    initial_feature = data[:, [0,1]]
+    pca = PCA()
+    params_pca = {"pca__n_components":[2, 3, 4, 5, 10, 15], "pca__whiten": [True]}
 
-    ### PCA new features
-    data_email = data[:, [1,5]]
-    data_financial = data[:, [6,20]]
+    for i in range(len(clf_list)):
 
-    pca_email = RandomizedPCA(n_components=email_components, whiten=True)
-    pca_email.fit(data_email)
-    features_email_pca = pca_email.transform(data_email)
+        name = "clf_" + str(i)
+        clf, params = clf_list[i]
 
-    pca_finance = RandomizedPCA(n_components=financial_components, whiten=True)
-    pca_finance.fit(data_financial)
-    features_finance_pca = pca_finance.transform(data_financial)
+        # For GridSearch to work with pipeline, the params have to have
+        # double underscores between specific classifier and its parameter.
+        new_params = {}
+        for key, value in params.iteritems():
+            new_params[name + "__" + key] = value
 
-    from numpy import c_
-    pca_features = c_[features_finance_pca, features_email_pca]
-    data = c_[initial_feature, pca_features]
+        new_params.update(params_pca)
+        clf_list[i] = (Pipeline([("pca", pca), (name, clf)]), new_params)
 
-    return data
+    return clf_list
 
 
 def scale_features(features):
     """
-    Split and scale features. Returns two Numpy nd arrays, labels and features.
+    Scale features using the Min-Max algorithm
     """
 
     # scale features via min-max
@@ -172,26 +197,12 @@ def scale_features(features):
     return features
 
 
-# select K best features
-#from sklearn.feature_selection import SelectKBest
-#from sklearn.feature_selection import chi2
-#
-#number_of_features = 10
-#features = SelectKBest(chi2, number_of_features).fit_transform(features, labels)
-
-
-### machine learning goes here!
-### please name your classifier clf for easy export below
-
 def setup_clf_list():
     """
     Instantiates all classifiers of interstes to be used.
     """
     # List of tuples of a classifier and its parameters.
     clf_list = []
-
-    # pca = PCA()
-    # params_pca = {"n_components": [2,3,4,5,6], "whiten":(True)}
 
     #
     # clf_naive = GaussianNB()
@@ -209,9 +220,9 @@ def setup_clf_list():
     clf_list.append( (clf_linearsvm, params_linearsvm) )
 
     #
-    # clf_adaboost = AdaBoostClassifier()
-    # params_adaboost = {"n_estimators":[20, 50, 100]}
-    # clf_list.append( (clf_adaboost, params_adaboost) )
+    clf_adaboost = AdaBoostClassifier()
+    params_adaboost = {"n_estimators":[20, 25, 30, 40, 50, 100]}
+    clf_list.append( (clf_adaboost, params_adaboost) )
 
     #
     clf_random_tree = RandomForestClassifier()
@@ -229,16 +240,20 @@ def setup_clf_list():
     clf_list.append( (clf_log, params_log) )
 
     #
-    clf_lda = LDA(n_components=2)
-    params_lda = {}
+    clf_lda = LDA()
+    params_lda = {"n_components":[0, 1, 2, 5, 10]}
     # "n_components":[1, 2, 3, 4, 5]
     clf_list.append( (clf_lda, params_lda) )
 
     #
     logistic = LogisticRegression()
-    rbm = BernoulliRBM(n_components=2)
+    rbm = BernoulliRBM()
     clf_rbm = Pipeline(steps=[('rbm', rbm), ('logistic', logistic)])
-    params_rbm = {}
+    params_rbm = {
+        "logistic__tol":[10**-10, 10**-20],
+        "logistic__C":[0.05, 0.5, 1, 10, 10**2,10**5,10**10, 10**20],
+        "rbm__n_components":[2,3,4]
+    }
     clf_list.append( (clf_rbm, params_rbm) )
 
     return clf_list
@@ -257,7 +272,7 @@ def optimize_clf(clf, params, features_train, labels_train, optimize=True):
 
 #    t0 = time()
     if optimize:
-        scorer = make_scorer(precision_score)
+        scorer = make_scorer(f1_score)
         clf = GridSearchCV(clf, params, scoring=scorer)
         clf = clf.fit(features_train, labels_train)
         clf = clf.best_estimator_
@@ -285,23 +300,32 @@ def optimize_clf_list(clf_list, features_train, labels_train):
 
     return best_estimators
 
-def train_unsupervised_clf(features_train, labels_train):
+def train_unsupervised_clf(features_train, labels_train, pca_pipeline):
     """
     """
 
-    clf_kmeans = KMeans(n_clusters=2, tol=0.001)
+    clf_kmeans = KMeans(n_clusters=2, tol = 0.001)
+
+    if pca_pipeline:
+        pca = PCA(n_components=2, whiten=True)
+
+        clf_kmeans = Pipeline([("pca", pca), ("kmeans", clf_kmeans)])
+
     clf_kmeans.fit( features_train )
 
     return [clf_kmeans]
 
-def train_clf(features_train, labels_train):
+def train_clf(features_train, labels_train, pca_pipeline=False):
     """
     """
 
     clf_supervised = setup_clf_list()
-    clf_supervised = optimize_clf_list(clf_supervised, features_train, labels_train)
 
-    clf_unsupervised = train_unsupervised_clf(features_train, labels_train)
+    if pca_pipeline:
+        clf_supervised = transform_pca_pipeline(clf_supervised)
+
+    clf_supervised = optimize_clf_list(clf_supervised, features_train, labels_train)
+    clf_unsupervised = train_unsupervised_clf(features_train, labels_train, pca_pipeline)
 
     return clf_supervised + clf_unsupervised
 
@@ -336,7 +360,7 @@ def evaluate_clf_list(clf_list, features_test, labels_test):
     return clf_with_scores
 
 
-def evaluation_loop(features, labels, num_iters=1000, test_size=0.3):
+def evaluation_loop(features, labels, pca_pipeline=False, num_iters=1000, test_size=0.3):
     """
     Run evaluation metrics multiple times, exactly iteration_count, so as to
     get a better idea of which classifier is doing better with different
@@ -344,14 +368,15 @@ def evaluation_loop(features, labels, num_iters=1000, test_size=0.3):
     """
     from numpy import asarray
 
-    evaluation_matrix = [[] for n in range(8)]
+    evaluation_matrix = [[] for n in range(9)]
     for i in range(num_iters):
 
         #### Split data into training and test sets
         features_train, features_test, labels_train, labels_test = train_test_split(features, labels, test_size=test_size)
 
+
         ### Tain all models
-        clf_list = train_clf(features_train, labels_train)
+        clf_list = train_clf(features_train, labels_train, pca_pipeline)
 
         for i, clf in enumerate(clf_list):
             scores = evaluate_clf(clf, features_test, labels_test)
@@ -369,55 +394,64 @@ def evaluation_loop(features, labels, num_iters=1000, test_size=0.3):
 
 # import build_email_features
 data_dict = load_preprocess_data()
-data_dict = add_features(data_dict, features_list, financial_log=False)
 
-### if you are creating any new features, you might want to do that here
+### To test financial_log and financial_power features, first turn them to True, then uncomment them up in features_new
+data_dict = add_features(data_dict, features_list, financial_log=True, financial_power=True)
+
 ### store to my_dataset for easy export below
 my_dataset = data_dict
 
 ### Extract features and labels from dataset for local testing
 data = featureFormat(my_dataset, features_list, sort_keys = True)
 
-# Here I was reducing pca features, and into two groups. At the end, it was not
-# used given that it did not help performance.
-# data = get_pca_features(data, email_components=3, financial_components=5)
-
 ### split into labels and features (this line assumes that the first
 ### feature in the array is the label, which is why "poi" must always
 ### be first in features_list
 labels, features = targetFeatureSplit(data)
-features = scale_features(features)
-
-# Another way to run the code for 1 iteration.
-
-#***********************************************************************#
-#### Split data into training and test sets
-#    features_train, features_test, labels_train, labels_test = train_test_split(features, labels, test_size=0.30)
-
-### ML
-#    clf_list = train_clf(features_train, labels_train)
-
-#    clf_evaluated = evaluate_clf_list(clf_list, features_test, labels_test)
-#    print clf_evaluated
-#    return clf_evaluated[0][0], data_dict
-#***********************************************************************#
+# features = scale_features(features)
 
 
-# ordered_list, summary_list = evaluation_loop(features, labels, num_iters=100, test_size=0.3)
+k = 15
+k_best = SelectKBest(k=k)
+k_best.fit(features, labels)
+
+scores = k_best.scores_
+unsorted_pairs = zip(features_list[1:], scores)
+sorted_pairs = list(reversed(sorted(unsorted_pairs, key=lambda x: x[1])))
+k_best_features = dict(sorted_pairs[:k])
+print "{0} best features: {1}\n".format(k, k_best_features.keys())
+
+features_list = poi + k_best_features.keys()
+
+
+
+### Select best features
+
 #
+####### UNCOMMENT THIS LINE TO RUN FULL CODE ####### Takes a long time to run if pca_pipeline is True.
+# ordered_list, summary_list = evaluation_loop(features, labels, pca_pipeline = False, num_iters=100, test_size=0.3)
+
 # print ordered_list
 # print "*"*100
 # print summary_list
 # print "*"*100
-#
+
 # clf = ordered_list[0]
 # scores = summary_list[clf]
 # print "Best classifier is ", clf
 # print "With scores of f1, recall, precision: ", scores
 
+clf_logistic = LogisticRegression(  C=10, class_weight=None, dual=False,
+                                    fit_intercept=True, intercept_scaling=1,
+                                    penalty='l2', random_state=None, tol=0.0001)
 
-clf = LogisticRegression(C=10**18, tol=10**-21)
+clf_lda = LDA(n_components=2)
+pca = PCA( n_components=8)
 
+clf = Pipeline(steps=[("pca", pca), ("logistic", clf_logistic)])
+
+
+test_classifier(clf_logistic, my_dataset, features_list)
 
 ### Dump your classifier, dataset, and features_list so
 ### anyone can run/check your results.
