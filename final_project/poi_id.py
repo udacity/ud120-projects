@@ -412,6 +412,9 @@ labels, features = targetFeatureSplit(data)
 # features = scale_features(features)
 
 
+
+### Select K best. Makes no sense to use when select k best
+### when we are using PCA. (in some cases it might, but here it does not)
 # k = 25
 # k_best = SelectKBest(k=k)
 # k_best.fit(features, labels)
@@ -446,7 +449,7 @@ clf_logistic = LogisticRegression(  C=10**20, penalty='l2', random_state=42, tol
 
 clf_lda = LDA(n_components=2)
 
-pca = PCA(n_components=15)
+pca = PCA(n_components=20)
 
 clf = Pipeline(steps=[("pca", pca), ("logistic", clf_logistic)])
 
