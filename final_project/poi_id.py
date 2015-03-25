@@ -81,6 +81,7 @@ features_new = [
 
                 # Email
                 "poi_ratio_messages",
+                # "poi_ratio_messages_square",
 
                 # Log Feats
                 "total_payments_log",
@@ -166,7 +167,7 @@ def transform_pca_pipeline(clf_list):
     """
 
     pca = PCA()
-    params_pca = {"pca__n_components":[2, 3, 4, 5, 10, 15], "pca__whiten": [True]}
+    params_pca = {"pca__n_components":[2, 3, 4, 5, 10, 15, 20], "pca__whiten": [False]}
 
     for i in range(len(clf_list)):
 
@@ -212,22 +213,31 @@ def setup_clf_list():
 
     #
     clf_tree = DecisionTreeClassifier()
-    params_tree = {"min_samples_split":[2, 5, 10, 20], "criterion": ('gini', 'entropy')}
+    params_tree = { "min_samples_split":[2, 5, 10, 20],
+                    "criterion": ('gini', 'entropy')
+                    }
     clf_list.append( (clf_tree, params_tree) )
 
     #
     clf_linearsvm = LinearSVC()
-    params_linearsvm = {"C": [0.5, 1, 5, 10, 100]}
+    params_linearsvm = {"C": [0.5, 1, 5, 10, 100, 10**10],
+                        "tol":[10**-1, 10**-10],
+                        "class_weight":['auto']
+
+                        }
     clf_list.append( (clf_linearsvm, params_linearsvm) )
 
     #
     clf_adaboost = AdaBoostClassifier()
-    params_adaboost = {"n_estimators":[20, 25, 30, 40, 50, 100]}
+    params_adaboost = { "n_estimators":[20, 25, 30, 40, 50, 100]
+                        }
     clf_list.append( (clf_adaboost, params_adaboost) )
 
     #
     clf_random_tree = RandomForestClassifier()
-    params_random_tree = {"n_estimators":[2, 3, 5], "criterion": ('gini', 'entropy')}
+    params_random_tree = {  "n_estimators":[2, 3, 5],
+                            "criterion": ('gini', 'entropy')
+                            }
     clf_list.append( (clf_random_tree, params_random_tree) )
 
     #
@@ -237,13 +247,15 @@ def setup_clf_list():
 
     #
     clf_log = LogisticRegression()
-    params_log = {"C":[0.05, 0.5, 1, 10, 10**2,10**5,10**10, 10**20]}
+    params_log = {  "C":[0.05, 0.5, 1, 10, 10**2,10**5,10**10, 10**20],
+                    "tol":[10**-1, 10**-5, 10**-10],
+                    "class_weight":['auto']
+                    }
     clf_list.append( (clf_log, params_log) )
 
     #
     clf_lda = LDA()
     params_lda = {"n_components":[0, 1, 2, 5, 10]}
-    # "n_components":[1, 2, 3, 4, 5]
     clf_list.append( (clf_lda, params_lda) )
 
     #
@@ -253,6 +265,7 @@ def setup_clf_list():
     params_rbm = {
         "logistic__tol":[10**-10, 10**-20],
         "logistic__C":[0.05, 0.5, 1, 10, 10**2,10**5,10**10, 10**20],
+        "logistic__class_weight":['auto'],
         "rbm__n_components":[2,3,4]
     }
     clf_list.append( (clf_rbm, params_rbm) )
@@ -267,11 +280,6 @@ def optimize_clf(clf, params, features_train, labels_train, optimize=True):
     find the optimal parameters. Returns
     """
 
-#    print "*"*40
-#    print "Fitting the classifier to the training set"
-#    print clf
-
-#    t0 = time()
     if optimize:
         scorer = make_scorer(f1_score)
         clf = GridSearchCV(clf, params, scoring=scorer)
@@ -279,11 +287,6 @@ def optimize_clf(clf, params, features_train, labels_train, optimize=True):
         clf = clf.best_estimator_
     else:
         clf = clf.fit(features_train, labels_train)
-
-#    print "done in %0.3fs" % (time() - t0)
-#    print "Best estimator found by grid search:"
-#    print clf.best_estimator_
-#    print "*"*40
 
     return clf
 
@@ -303,12 +306,13 @@ def optimize_clf_list(clf_list, features_train, labels_train):
 
 def train_unsupervised_clf(features_train, labels_train, pca_pipeline):
     """
+    Train unsupervised classifiers. Just KMeans for now.
     """
 
     clf_kmeans = KMeans(n_clusters=2, tol = 0.001)
 
     if pca_pipeline:
-        pca = PCA(n_components=2, whiten=True)
+        pca = PCA(n_components=2, whiten=False)
 
         clf_kmeans = Pipeline([("pca", pca), ("kmeans", clf_kmeans)])
 
@@ -337,13 +341,8 @@ def train_clf(features_train, labels_train, pca_pipeline=False):
 
 def evaluate_clf(clf, features_test, labels_test):
 
-#    print "\nPredicting the people names on the testing set"
-#    print clf
-#    t0 = time()
-    labels_pred = clf.predict(features_test)
-#    print "done in %0.3fs" % (time() - t0)
 
-#    print classification_report(labels_test, labels_pred)
+    labels_pred = clf.predict(features_test)
 
     f1 = f1_score(labels_test, labels_pred)
     recall = recall_score(labels_test, labels_pred)
@@ -357,7 +356,6 @@ def evaluate_clf_list(clf_list, features_test, labels_test):
         f1, recall, precision = evaluate_clf(clf, features_test, labels_test)
         clf_with_scores.append( (clf, f1, recall, precision) )
 
-#    orederd_clf = sorted(clf_with_scores, key = lambda tup: tup[1], reverse=True)
     return clf_with_scores
 
 
@@ -388,7 +386,6 @@ def evaluation_loop(features, labels, pca_pipeline=False, num_iters=1000, test_s
     for i, col in enumerate(evaluation_matrix):
         summary_list[clf_list[i]] = ( sum(asarray(col)) )
 
-#    print summary_list
     ordered_list = sorted(summary_list.keys() , key = lambda k: summary_list[k][0], reverse=True)
     return ordered_list, summary_list
 
@@ -415,7 +412,7 @@ labels, features = targetFeatureSplit(data)
 
 ### Select K best. Makes no sense to use when select k best
 ### when we are using PCA. (in some cases it might, but here it does not)
-# k = 25
+# k = 20
 # k_best = SelectKBest(k=k)
 # k_best.fit(features, labels)
 #
@@ -424,29 +421,32 @@ labels, features = targetFeatureSplit(data)
 # sorted_pairs = list(reversed(sorted(unsorted_pairs, key=lambda x: x[1])))
 # k_best_features = dict(sorted_pairs[:k])
 # print "{0} best features: {1}\n".format(k, k_best_features.keys())
+# print ""
+# print k_best_features
 #
 # features_list = poi + k_best_features.keys()
 
 
-
-### Select best features
-
-#
 ####### UNCOMMENT THIS LINE TO RUN FULL CODE ####### Takes a long time to run if pca_pipeline is True.
-# ordered_list, summary_list = evaluation_loop(features, labels, pca_pipeline = False, num_iters=10, test_size=0.3)
+# ordered_list, summary_list = evaluation_loop(features, labels, pca_pipeline = True, num_iters=10, test_size=0.3)
 
 # print ordered_list
 # print "*"*100
 # print summary_list
 # print "*"*100
-
+#
 # clf = ordered_list[0]
 # scores = summary_list[clf]
 # print "Best classifier is ", clf
 # print "With scores of f1, recall, precision: ", scores
 
-clf_logistic = LogisticRegression(  C=10**20, penalty='l2', random_state=42, tol=10**-10, class_weight='auto')
 
+# Manually pick classifiers
+clf_logistic = LogisticRegression(  C=10**20,
+                                    penalty='l2',
+                                    random_state=42,
+                                    tol=10**-10,
+                                    class_weight='auto')
 clf_lda = LDA(n_components=2)
 
 pca = PCA(n_components=20)
