@@ -34,17 +34,11 @@ plt.show()
 ### k nearest neighbors
 ### random forest
 
-### adaboost (sometimes also called boosted decision tree)
-from sklearn.ensemble import AdaBoostClassifier
-from sklearn.tree import DecisionTreeClassifier
-import numpy as np
+### import the sklearn module for GaussianNB
+from sklearn.naive_bayes import GaussianNB
 
-rng = np.random.RandomState(1)
-
-clf = AdaBoostClassifier(DecisionTreeClassifier(min_samples_split = 20, 
-                                                max_depth = 1000), 
-                         n_estimators=1000,
-                         learning_rate=0.5)
+### create classifier
+clf = GaussianNB()
 
 ### fit the classifier on the training features and labels
 t0 = time()

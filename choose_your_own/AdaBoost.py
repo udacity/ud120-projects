@@ -39,12 +39,11 @@ from sklearn.ensemble import AdaBoostClassifier
 from sklearn.tree import DecisionTreeClassifier
 import numpy as np
 
-rng = np.random.RandomState(1)
+rng = np.random.RandomState(10)
 
-clf = AdaBoostClassifier(DecisionTreeClassifier(min_samples_split = 20, 
-                                                max_depth = 1000), 
+clf = AdaBoostClassifier(DecisionTreeClassifier(min_samples_split = 20), 
                          n_estimators=1000,
-                         learning_rate=0.5)
+                         learning_rate=0.9, algorithm = 'SAMME', random_state = rng)
 
 ### fit the classifier on the training features and labels
 t0 = time()

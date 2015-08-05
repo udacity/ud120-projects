@@ -34,17 +34,10 @@ plt.show()
 ### k nearest neighbors
 ### random forest
 
-### adaboost (sometimes also called boosted decision tree)
-from sklearn.ensemble import AdaBoostClassifier
-from sklearn.tree import DecisionTreeClassifier
-import numpy as np
+### k nearest neighbors
+from sklearn.neighbors import KNeighborsClassifier
 
-rng = np.random.RandomState(1)
-
-clf = AdaBoostClassifier(DecisionTreeClassifier(min_samples_split = 20, 
-                                                max_depth = 1000), 
-                         n_estimators=1000,
-                         learning_rate=0.5)
+clf = KNeighborsClassifier(n_neighbors = 20)
 
 ### fit the classifier on the training features and labels
 t0 = time()

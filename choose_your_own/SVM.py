@@ -34,17 +34,16 @@ plt.show()
 ### k nearest neighbors
 ### random forest
 
-### adaboost (sometimes also called boosted decision tree)
-from sklearn.ensemble import AdaBoostClassifier
-from sklearn.tree import DecisionTreeClassifier
-import numpy as np
+### import the sklearn module for SVM
+from sklearn.svm import SVC
 
-rng = np.random.RandomState(1)
+### These lines effectively slice the training dataset down to 1% of 
+### its original size, tossing out 99% of the training data. 
+### features_train = features_train[:len(features_train)/100] 
+### labels_train = labels_train[:len(labels_train)/100] 
 
-clf = AdaBoostClassifier(DecisionTreeClassifier(min_samples_split = 20, 
-                                                max_depth = 1000), 
-                         n_estimators=1000,
-                         learning_rate=0.5)
+### create classifier
+clf = SVC(kernel='rbf', C = 10000.0, gamma = 1)
 
 ### fit the classifier on the training features and labels
 t0 = time()
