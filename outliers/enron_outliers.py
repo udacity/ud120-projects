@@ -27,9 +27,7 @@ for point in data:
 keys = data_dict.keys()
 
 for key in keys:
-    print key
-    print data_dict[key]['salary']
-    print data_dict[key]['bonus']
+    print key, data_dict[key]['salary'], data_dict[key]['bonus']
 
 
 

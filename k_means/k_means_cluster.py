@@ -44,12 +44,30 @@ data_dict = pickle.load( open("../final_project/final_project_dataset.pkl", "r")
 ### there's an outlier--remove it! 
 data_dict.pop("TOTAL", 0)
 
+min_sal = 1000000
+
+max_sal = -1
+
+for val in data_dict.values():
+    temp = val['salary']
+    if temp != "NaN":
+        if temp >= max_sal:
+            max_sal = temp
+        if temp <= min_sal:
+            min_sal = temp
+
+print min_sal
+print max_sal
+    
+
 
 ### the input features we want to use 
 ### can be any key in the person-level dictionary (salary, director_fees, etc.) 
 feature_1 = "salary"
 feature_2 = "exercised_stock_options"
+#feature_3 = "total_payments"
 poi  = "poi"
+#features_list = [poi, feature_1, feature_2, feature_3]
 features_list = [poi, feature_1, feature_2]
 data = featureFormat(data_dict, features_list )
 poi, finance_features = targetFeatureSplit( data )
@@ -60,13 +78,16 @@ poi, finance_features = targetFeatureSplit( data )
 ### for f1, f2, _ in finance_features:
 ### (as it's currently written, line below assumes 2 features)
 for f1, f2 in finance_features:
-    plt.scatter( f1, f2 )
+#for f1, f2, f3 in finance_features:
+    #plt.scatter( f1, f2, f3 )
+    plt.scatter( f1, f2)
 plt.show()
 
 
 
 from sklearn.cluster import KMeans
 features_list = ["poi", feature_1, feature_2]
+#features_list = ["poi", feature_1, feature_2, feature_3]
 data2 = featureFormat(data_dict, features_list )
 poi, finance_features = targetFeatureSplit( data2 )
 clf = KMeans(n_clusters=2)
@@ -82,7 +103,31 @@ try:
 except NameError:
     print "no predictions object named pred found, no clusters to plot"
 
+from sklearn import preprocessing
 
+min_max_scaler = preprocessing.MinMaxScaler()
+finance_features_scaled = min_max_scaler.fit_transform(finance_features)
+
+### in the "clustering with 3 features" part of the mini-project,
+### you'll want to change this line to 
+### for f1, f2, _ in finance_features:
+### (as it's currently written, line below assumes 2 features)
+for f1, f2 in finance_features_scaled:
+#for f1, f2, f3 in finance_features:
+    #plt.scatter( f1, f2, f3 )
+    plt.scatter( f1, f2)
+plt.show()
+
+from sklearn.cluster import KMeans
+features_list = ["poi", feature_1, feature_2]
+#features_list = ["poi", feature_1, feature_2, feature_3]
+data2 = featureFormat(data_dict, features_list )
+poi, finance_features = targetFeatureSplit( data2 )
+min_max_scaler = preprocessing.MinMaxScaler()
+finance_features_scaled = min_max_scaler.fit_transform(finance_features)
+clf = KMeans(n_clusters=2)
+pred = clf.fit_predict( finance_features_scaled )
+Draw(pred, finance_features_scaled, poi, name="clusters_after_scaling.pdf", f1_name=feature_1, f2_name=feature_2)
 
 
 
