@@ -49,7 +49,7 @@ for name, from_person in [("sara", from_sara), ("chris", from_chris)]:
 
         ### use str.replace() to remove any instances of the words
         ### ["sara", "shackleton", "chris", "germani"]
-        remove_list = ["sara", "shackleton", "chris", "germani"]
+        remove_list = ["sara", "shackleton", "chris", "germani", "sshacklensf", "cgermannsf"]
         for word in remove_list:
             text = text.replace(word, "")
         text = text.strip()
