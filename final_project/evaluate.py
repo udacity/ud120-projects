@@ -1,30 +1,54 @@
-from numpy import mean
-from sklearn import cross_validation
-from sklearn.metrics import accuracy_score, precision_score, recall_score
-import sys
+#!/usr/bin/python
 
-def evaluate_clf(clf, features, labels, num_iters=1000, test_size=0.3):
-    print clf
-    accuracy = []
-    precision = []
-    recall = []
-    first = True
-    for trial in range(num_iters):
-        features_train, features_test, labels_train, labels_test =\
-            cross_validation.train_test_split(features, labels, test_size=test_size)
+import sys
+from sklearn.cross_validation import StratifiedShuffleSplit
+sys.path.append("../tools/")
+from feature_format import featureFormat, targetFeatureSplit
+
+def get_scores(clf, dataset, feature_list, folds = 1000):
+    data = featureFormat(dataset, feature_list, sort_keys = True)
+    labels, features = targetFeatureSplit(data)
+    cv = StratifiedShuffleSplit(labels, folds, random_state = 42)
+    true_negatives = 0
+    false_negatives = 0
+    true_positives = 0
+    false_positives = 0
+    for train_idx, test_idx in cv: 
+        features_train = []
+        features_test  = []
+        labels_train   = []
+        labels_test    = []
+        for ii in train_idx:
+            features_train.append( features[ii] )
+            labels_train.append( labels[ii] )
+        for jj in test_idx:
+            features_test.append( features[jj] )
+            labels_test.append( labels[jj] )
+        
+        ### fit the classifier using training set, and test on test set
         clf.fit(features_train, labels_train)
         predictions = clf.predict(features_test)
-        accuracy.append(accuracy_score(labels_test, predictions))
-        precision.append(precision_score(labels_test, predictions))
-        recall.append(recall_score(labels_test, predictions))
-        if trial % 10 == 0:
-            if first:
-                sys.stdout.write('\nProcessing')
-            sys.stdout.write('.')
-            sys.stdout.flush()
-            first = False
-
-    print "done.\n"
-    print "precision: {}".format(mean(precision))
-    print "recall:    {}".format(mean(recall))
-    return mean(precision), mean(recall)
+        for prediction, truth in zip(predictions, labels_test):
+            if prediction == 0 and truth == 0:
+                true_negatives += 1
+            elif prediction == 0 and truth == 1:
+                false_negatives += 1
+            elif prediction == 1 and truth == 0:
+                false_positives += 1
+            elif prediction == 1 and truth == 1:
+                true_positives += 1
+            else:
+                print "Warning: Found a predicted label not == 0 or 1."
+                print "All predictions should take value 0 or 1."
+                print "Evaluating performance for processed predictions:"
+                break
+    try:
+        total_predictions = true_negatives + false_negatives + false_positives + true_positives
+        accuracy = 1.0*(true_positives + true_negatives)/total_predictions
+        precision = 1.0*true_positives/(true_positives+false_positives)
+        recall = 1.0*true_positives/(true_positives+false_negatives)
+        f1 = 2.0 * true_positives/(2*true_positives + false_positives+false_negatives)
+        f2 = (1+2.0*2.0) * precision*recall/(4*precision + recall)
+        return precision, recall
+    except:
+        print "Got a divide by zero when trying out:", clf
