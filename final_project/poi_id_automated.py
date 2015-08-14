@@ -9,14 +9,6 @@ from tester import test_classifier, dump_classifier_and_data
 
 from sklearn.grid_search import GridSearchCV
 from sklearn.cross_validation import StratifiedShuffleSplit
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.feature_selection import f_classif
-from sklearn.decomposition import PCA
-
-### Classifier
-from sklearn.linear_model import LogisticRegression
-from sklearn import decomposition
 
 ### helper functions for data wrangling
 from data_wrangling import *
@@ -61,11 +53,8 @@ data_dict, features_list = add_features_totals(data_dict, total_features_list)
 ### Store to my_dataset for easy export below.
 my_dataset = data_dict
 
-### Extract features and labels from dataset
+### Splits data dictionary into features dataframe and labels dataframe.
 labels, features = targetFeatureSplitPandas(my_dataset)
-
-X_features = list(features.columns)
-features_list = ['poi'] + X_features
 
 ### Task 4: Try a varity of classifiers
 ### Please name your classifier clf for easy export below.
@@ -73,52 +62,68 @@ features_list = ['poi'] + X_features
 ### you'll need to use Pipelines. For more info:
 ### http://scikit-learn.org/stable/modules/pipeline.html
 
-sk_fold = StratifiedShuffleSplit(labels, n_iter=1000, test_size=0.1)
+### StratifiedShuffleSplits for 100 internal cross-validation splits
+### within the grid-search.
+sss = StratifiedShuffleSplit(labels, n_iter=100)
 
-pipeline = Pipeline(steps=[('minmaxer', MinMaxScaler()),
-                             ('selection', SelectKBest(score_func=f_classif)),
-                             ('reducer', PCA()),
-                             ('classifier', LogisticRegression())
-                             ])
-                             
-params = {'selection__k': [10, 15, 17, 19],
-          'classifier__C': [1e-5, 1e-2, 1e-1, 1, 10, 100],
-          'classifier__class_weight': [{True: 12, False: 1},
-                                       {True: 10, False: 1},
-                                      {True: 8, False: 1},
-                                      {True: 15, False: 1},
-                                      {True: 20, False: 1},
-                                      'auto', None],
-          'classifier__tol': [1e-1, 1e-2, 1e-4, 1e-8, 1e-16,
-                              1e-32, 1e-64, 1e-128, 1e-256],
-          'reducer__n_components': [1, 2, 3, 4, 5, .25, .4, .5, .6,
-                                    .75, .9, 'mle'],
-          'reducer__whiten': [True, False]
-          }
+### Since we need to optimize our parameters for both recall and precision
+### better than 0.3, so I have chosen F1 as my scoring metric for GridSearchCV
+scoring_metric = 'f1'
 
-scoring_metric = 'recall'
+### Logistic Regression Classifier Pipeline
 
-grid_searcher = GridSearchCV(pipeline, param_grid=params, cv=sk_fold, 
-                             n_jobs=-1, scoring=scoring_metric, verbose=0)
-                             
-grid_searcher.fit(features, y=labels)
+print "Logistic Regression Classifier starts...................\n"
 
-mask = grid_searcher.best_estimator_.named_steps['selection'].get_support()
-top_features = [x for (x, boolean) in zip(features, mask) if boolean]
-n_pca_components = grid_searcher.best_estimator_.named_steps['reducer'].n_components_
+### Splits data dictionary into features dataframe and labels dataframe.
+labels, features = targetFeatureSplitPandas(my_dataset)
 
-print "Cross-validated {0} score: {1}".format(scoring_metric, grid_searcher.best_score_)
-print "{0} features selected".format(len(top_features))
-print "Reduced to {0} PCA components".format(n_pca_components)
-###################
-# Print the parameters used in the model selected from grid search
-print "Params: ", grid_searcher.best_params_ 
-###################
+### Get pipeline and parameters for GridSearchCV for above classifier.
+### If you want to run the optimization again then change reoptimize to False
+### Please be aware, it might take significant time.
+pipe, parameters = get_logReg_optimizer(reoptimize = False)
 
-clf = grid_searcher.best_estimator_
+### Find the optimized parameters using GridSearchCV
+grid_searcher = GridSearchCV(pipe, param_grid=parameters, cv=sss, 
+                             scoring = scoring_metric)
+grid_searcher.fit(features, labels)
 
-### combine labels and features into data dictionary
-my_dataset = combineLabelsFeatures(labels, features)
+### Assign the best estimator to final LR classifier
+lr_clf = grid_searcher.best_estimator_
+
+### combine labels and features into data dictionary for logistic regression
+lr_dataset = combineLabelsFeatures(labels, features)
+
+
+test_classifier(lr_clf, lr_dataset, features_list)
+
+print "Logistic Regression Classifier ends...................\n"
+
+### K Neighbor Classifier Pipeline
+
+print "K Neighbor Classifier starts...................\n"
+
+### Splits data dictionary into features dataframe and labels dataframe.
+labels, features = targetFeatureSplitPandas(my_dataset)
+
+### Get pipeline and parameters for GridSearchCV for K Neighbor classifier.
+### If you want to run the optimization again then change reoptimize to False
+### Please be aware, it might take significant time.
+pipe, parameters = get_kNeighbor_optimizer(reoptimize = False)
+
+### Find the optimized parameters using GridSearchCV
+grid_searcher = GridSearchCV(pipe, param_grid=parameters, cv=sss,
+                             scoring = scoring_metric)
+grid_searcher.fit(features, labels)
+
+### Assign the best estimator to final LR classifier
+kn_clf = grid_searcher.best_estimator_
+
+### combine labels and features into data dictionary for logistic regression
+kn_dataset = combineLabelsFeatures(labels, features)
+
+test_classifier(kn_clf, kn_dataset, features_list)
+
+print "K Neighbor Classifier ends...................\n"
 
 ### Task 5: Tune your classifier to achieve better than .3 precision and recall 
 ### using our testing script.
@@ -126,12 +131,11 @@ my_dataset = combineLabelsFeatures(labels, features)
 ### shuffle split cross validation. For more info: 
 ### http://scikit-learn.org/stable/modules/generated/sklearn.cross_validation.StratifiedShuffleSplit.html
 
-### Extract features and labels frouum dataset for local testing
-data = featureFormat(my_dataset, features_list, sort_keys = True)
-labels, features = targetFeatureSplit(data)
+my_dataset = lr_dataset
+clf = lr_clf
     
-test_classifier(clf, my_dataset, features_list)
+#test_classifier(clf, my_dataset, features_list)
 
 ### Dump your classifier, dataset, and features_list so 
 ### anyone can run/check your results.
-dump_classifier_and_data(clf, my_dataset, features_list)
+#dump_classifier_and_data(clf, my_dataset, features_list)
