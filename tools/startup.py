@@ -8,22 +8,22 @@ from urllib import urlretrieve
 realpath = os.path.dirname(os.path.realpath(__file__))
 
 print("")
-print("checking for nltk")
 try:
+    print("checking for nltk")
     import nltk
 except ImportError:
     print("you should install nltk before continuing")
     exit()
 
-print("checking for numpy")
 try:
+    print("checking for numpy")
     import numpy
 except ImportError:
     print "you should install numpy before continuing"
     exit()
 
-print("checking for sklearn")
 try:
+    print("checking for sklearn")
     import sklearn
 except ImportError:
     print "you should install sklearn before continuing"
