@@ -81,6 +81,9 @@ grid_searcher_lr.fit(features, labels)
 ### Score of best_estimator on the left out data
 #print "best score is {0}".format(grid_searcher_rf.best_score_)
 
+# Print the optimized parameters used in the model selected from grid search
+#print "Params: ", grid_searcher_lr.best_params_ 
+
 ### Assign the best estimator to final LR classifier
 lr_clf = grid_searcher_lr.best_estimator_
 
@@ -112,6 +115,9 @@ grid_searcher_kn.fit(features, labels)
 
 ### Score of best_estimator on the left out data
 #print "best score is {0}".format(grid_searcher_kn.best_score_)
+
+# Print the optimized parameters used in the model selected from grid search
+#print "Params: ", grid_searcher_kn.best_params_ 
 
 ### Assign the best estimator to final K Neighbors classifier
 kn_clf = grid_searcher_kn.best_estimator_
@@ -145,6 +151,9 @@ grid_searcher_svm.fit(features, labels)
 ### Score of best_estimator on the left out data
 #print "best score is {0}".format(grid_searcher_svm.best_score_)
 
+# Print the optimized parameters used in the model selected from grid search
+#print "Params: ", grid_searcher_svm.best_params_ 
+
 ### Assign the best estimator to final SVM classifier
 svm_clf = grid_searcher_svm.best_estimator_
 
@@ -177,6 +186,9 @@ grid_searcher_rf.fit(features, labels)
 ### Score of best_estimator on the left out data
 #print "best score is {0}".format(grid_searcher_rf.best_score_)
 
+# Print the optimized parameters used in the model selected from grid search
+#print "Params: ", grid_searcher_rf.best_params_ 
+
 ### Assign the best estimator to final Random Forest classifier
 rf_clf = grid_searcher_rf.best_estimator_
 
@@ -204,6 +216,10 @@ n_pca_components = clf.named_steps['pca'].n_components_
     
 print "{0} best features were selected".format(len(top_features))
 print "Reduced to {0} PCA components".format(n_pca_components)
+
+### Extract features and labels frouum dataset for local testing
+data = featureFormat(my_dataset, features_list, sort_keys = True)
+labels, features = targetFeatureSplit(data)
     
 test_classifier(clf, my_dataset, features_list)
 
