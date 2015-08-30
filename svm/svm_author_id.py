@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 """ 
     this is the code to accompany the Lesson 2 (SVM) mini-project
@@ -21,7 +21,7 @@ from email_preprocess import preprocess
 ### labels_train and labels_test are the corresponding item labels
 features_train, features_test, labels_train, labels_test = preprocess()
 
-
+### make sure you use // when dividing for integer division
 
 
 #########################################################
