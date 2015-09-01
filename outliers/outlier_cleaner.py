@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 
 def outlierCleaner(predictions, ages, net_worths):

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 """ 
     this is the code to accompany the Lesson 3 (decision tree) mini-project
