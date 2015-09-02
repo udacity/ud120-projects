@@ -9,6 +9,7 @@ Overview of changes:
 
 * Shabangs changed to python3
 * Parentheses around print statements
-* Pickle files opened in 'rb' mode
+* Pickle files opened in binary mode for read/write
 * Library updates like urllib and cPickle
+* Language core changes like translate
 * Occasional Python3 syntax helper comments
