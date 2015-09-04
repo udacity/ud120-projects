@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import pickle
 import numpy
@@ -9,8 +9,8 @@ numpy.random.seed(42)
 ### these files should have been created from the previous (Lesson 10) mini-project.
 words_file = "../text_learning/your_word_data.pkl" 
 authors_file = "../text_learning/your_email_authors.pkl"
-word_data = pickle.load( open(words_file, "r"))
-authors = pickle.load( open(authors_file, "r") )
+word_data = pickle.load( open(words_file, "rb"))
+authors = pickle.load( open(authors_file, "rb") )
 
 
 

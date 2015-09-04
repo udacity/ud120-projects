@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import sys
 import pickle
@@ -13,7 +13,7 @@ from tester import dump_classifier_and_data
 features_list = ['poi','salary'] # You will need to use more features
 
 ### Load the dictionary containing the dataset
-data_dict = pickle.load(open("final_project_dataset.pkl", "r") )
+data_dict = pickle.load(open("final_project_dataset.pkl", "rb") )
 
 ### Task 2: Remove outliers
 ### Task 3: Create new feature(s)

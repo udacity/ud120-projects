@@ -1,4 +1,4 @@
-#!/usr/bin/pickle
+#!/usr/bin/python3
 
 """ a basic script for importing student's POI identifier,
     and checking the results that they get from it 
@@ -56,9 +56,9 @@ def test_classifier(clf, dataset, feature_list, folds = 1000):
             elif prediction == 1 and truth == 1:
                 true_positives += 1
             else:
-                print "Warning: Found a predicted label not == 0 or 1."
-                print "All predictions should take value 0 or 1."
-                print "Evaluating performance for processed predictions:"
+                print("Warning: Found a predicted label not == 0 or 1.")
+                print("All predictions should take value 0 or 1.")
+                print("Evaluating performance for processed predictions:")
                 break
     try:
         total_predictions = true_negatives + false_negatives + false_positives + true_positives
@@ -67,26 +67,26 @@ def test_classifier(clf, dataset, feature_list, folds = 1000):
         recall = 1.0*true_positives/(true_positives+false_negatives)
         f1 = 2.0 * true_positives/(2*true_positives + false_positives+false_negatives)
         f2 = (1+2.0*2.0) * precision*recall/(4*precision + recall)
-        print clf
-        print PERF_FORMAT_STRING.format(accuracy, precision, recall, f1, f2, display_precision = 5)
-        print RESULTS_FORMAT_STRING.format(total_predictions, true_positives, false_positives, false_negatives, true_negatives)
-        print ""
+        print(clf)
+        print(PERF_FORMAT_STRING.format(accuracy, precision, recall, f1, f2, display_precision = 5))
+        print(RESULTS_FORMAT_STRING.format(total_predictions, true_positives, false_positives, false_negatives, true_negatives))
+        print("")
     except:
-        print "Got a divide by zero when trying out:", clf
+        print("Got a divide by zero when trying out:", clf)
 
 CLF_PICKLE_FILENAME = "my_classifier.pkl"
 DATASET_PICKLE_FILENAME = "my_dataset.pkl"
 FEATURE_LIST_FILENAME = "my_feature_list.pkl"
 
 def dump_classifier_and_data(clf, dataset, feature_list):
-    pickle.dump(clf, open(CLF_PICKLE_FILENAME, "w") )
-    pickle.dump(dataset, open(DATASET_PICKLE_FILENAME, "w") )
-    pickle.dump(feature_list, open(FEATURE_LIST_FILENAME, "w") )
+    pickle.dump(clf, open(CLF_PICKLE_FILENAME, "wb") )
+    pickle.dump(dataset, open(DATASET_PICKLE_FILENAME, "wb") )
+    pickle.dump(feature_list, open(FEATURE_LIST_FILENAME, "wb") )
 
 def load_classifier_and_data():
-    clf = pickle.load(open(CLF_PICKLE_FILENAME, "r") )
-    dataset = pickle.load(open(DATASET_PICKLE_FILENAME, "r") )
-    feature_list = pickle.load(open(FEATURE_LIST_FILENAME, "r"))
+    clf = pickle.load(open(CLF_PICKLE_FILENAME, "rb") )
+    dataset = pickle.load(open(DATASET_PICKLE_FILENAME, "rb") )
+    feature_list = pickle.load(open(FEATURE_LIST_FILENAME, "rb"))
     return clf, dataset, feature_list
 
 def main():
