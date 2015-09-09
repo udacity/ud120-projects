@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import os.path
 import pickle
 import cPickle
 import numpy
@@ -9,9 +10,13 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_selection import SelectPercentile, f_classif
 
 
+BASE = os.path.dirname(__file__)
+WORD_FILE = os.path.join(BASE, 'word_data.pkl')
+AUTHOR_FILE = os.path.join(BASE, 'email_authors.pkl')
 
-def preprocess(words_file = "../tools/word_data.pkl", authors_file="../tools/email_authors.pkl"):
-    """ 
+
+def preprocess(words_file=WORD_FILE, authors_file=AUTHOR_FILE):
+    """
         this function takes a pre-made list of email texts (by default word_data.pkl)
         and the corresponding authors (by default email_authors.pkl) and performs
         a number of preprocessing steps:
@@ -50,7 +55,7 @@ def preprocess(words_file = "../tools/word_data.pkl", authors_file="../tools/ema
 
 
 
-    ### feature selection, because text is super high dimensional and 
+    ### feature selection, because text is super high dimensional and
     ### can be really computationally chewy as a result
     selector = SelectPercentile(f_classif, percentile=10)
     selector.fit(features_train_transformed, labels_train)
