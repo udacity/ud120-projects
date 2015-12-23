@@ -91,6 +91,10 @@ if len(cleaned_data) > 0:
     plt.ylabel("net worths")
     plt.show()
 
+    print('Coefficients: \n', reg.coef_)
+    print('Intercept: \n', reg.intercept_)
+    print('Variance score: %.4f' % reg.score(ages_test, net_worths_test))
+
 
 else:
     print "outlierCleaner() is returning an empty list, no refitting to be done"

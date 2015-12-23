@@ -69,3 +69,11 @@ for index in range(0, len(enron_data)):
 
 print no_payments
 print float(no_payments*100)/float(len(enron_data))
+
+
+for index in range(0, len(enron_data)):
+    person_name = enron_data.keys()[index]
+    if ( (enron_data[person_name]['salary'] != 'NaN') &
+             (enron_data[person_name]['salary'] > 1000000)
+             & (enron_data[person_name]['bonus'] > 5000000)):
+        print person_name
