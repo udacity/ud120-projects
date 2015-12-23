@@ -43,12 +43,52 @@ data_dict = pickle.load( open("../final_project/final_project_dataset.pkl", "r")
 ### there's an outlier--remove it! 
 data_dict.pop("TOTAL", 0)
 
+min_stock = data_dict[data_dict.keys()[1]]['exercised_stock_options']
+max_stock = data_dict[data_dict.keys()[1]]['exercised_stock_options']
+print "Initial Max stock = ", max_stock
+print "Initial Min stock = ", min_stock
+for index in range(1, len(data_dict)):
+    person_name = data_dict.keys()[index]
+    if data_dict[person_name]['exercised_stock_options'] != 'NaN':
+        if data_dict[person_name]['exercised_stock_options'] < min_stock:
+            min_stock = data_dict[person_name]['exercised_stock_options']
+        if data_dict[person_name]['exercised_stock_options'] > max_stock:
+            max_stock = data_dict[person_name]['exercised_stock_options']
+
+print "Max stock = ", max_stock
+print "Min stock = ", min_stock
+
+
+min_salary = data_dict[data_dict.keys()[0]]['salary']
+max_salary = data_dict[data_dict.keys()[0]]['salary']
+print "Initial Max salary = ", max_salary
+print "Initial Min salary = ", min_salary
+for index in range(1, len(data_dict)):
+    person_name = data_dict.keys()[index]
+    if data_dict[person_name]['salary'] != 'NaN':
+        if data_dict[person_name]['salary'] < min_salary:
+            min_salary = data_dict[person_name]['salary']
+        if data_dict[person_name]['salary'] > max_salary:
+            max_salary = data_dict[person_name]['salary']
+
+print "Max salary = ", max_salary
+print "Min salary = ", min_salary
+
+# What would be the rescaled value of a "salary" feature that had an original value of $200,000,
+# and an "exercised_stock_options" feature of $1 million?
+# (Be sure to represent these numbers as floats, not integers!)
+
+print "Normalized stock = ", float(1000000 - min_stock) / float(max_stock - min_stock)
+print "Normalized salary = ", float(200000 - min_salary) / float(max_salary - min_salary)
+
 
 ### the input features we want to use 
 ### can be any key in the person-level dictionary (salary, director_fees, etc.) 
 feature_1 = "salary"
 feature_2 = "exercised_stock_options"
+feature_3 = "total_payments"
 poi  = "poi"
+# features_list = [poi, feature_1, feature_2, feature_3]
 features_list = [poi, feature_1, feature_2]
 data = featureFormat(data_dict, features_list )
 poi, finance_features = targetFeatureSplit( data )
@@ -58,6 +98,7 @@ poi, finance_features = targetFeatureSplit( data )
 ### you'll want to change this line to 
 ### for f1, f2, _ in finance_features:
 ### (as it's currently written, the line below assumes 2 features)
+# for f1, f2, f3 in finance_features:
 for f1, f2 in finance_features:
     plt.scatter( f1, f2 )
 plt.show()
@@ -65,6 +106,9 @@ plt.show()
 ### cluster here; create predictions of the cluster labels
 ### for the data and store them to a list called pred
 
+from sklearn.cluster import KMeans
+
+pred = KMeans(n_clusters=2).fit_predict(finance_features)
 
 
 

@@ -77,3 +77,19 @@ for index in range(0, len(enron_data)):
              (enron_data[person_name]['salary'] > 1000000)
              & (enron_data[person_name]['bonus'] > 5000000)):
         print person_name
+
+#First entry is NaN so we skip it
+min_stock = enron_data[enron_data.keys()[1]]['exercised_stock_options']
+max_stock = enron_data[enron_data.keys()[1]]['exercised_stock_options']
+print "Max stock = ", max_stock
+print "Min stock = ", min_stock
+for index in range(2, len(enron_data)):
+    person_name = enron_data.keys()[index]
+    if enron_data[person_name]['exercised_stock_options'] != 'NaN':
+        if enron_data[person_name]['exercised_stock_options'] < min_stock:
+            min_stock = enron_data[person_name]['exercised_stock_options']
+        if enron_data[person_name]['exercised_stock_options'] > max_stock:
+            max_stock = enron_data[person_name]['exercised_stock_options']
+
+print "Max stock = ", max_stock
+print "Min stock = ", min_stock
