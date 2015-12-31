@@ -2,9 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="52c2b5ce-7b1c-4890-9529-b4ad32624d5d" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../feature_selection/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../feature_selection/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../pca/eigenfaces.py" afterPath="$PROJECT_DIR$/../pca/eigenfaces.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../text_learning/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../text_learning/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/validate_poi.py" afterPath="$PROJECT_DIR$/validate_poi.py" />
     </list>
     <ignored path="validation.iws" />
@@ -29,8 +26,8 @@
       <file leaf-file-name="validate_poi.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/validate_poi.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.8287671">
-              <caret line="39" column="42" selection-start-line="39" selection-start-column="42" selection-end-line="39" selection-end-column="42" />
+            <state vertical-scroll-proportion="0.9315069">
+              <caret line="70" column="8" selection-start-line="70" selection-start-column="8" selection-end-line="70" selection-end-column="8" />
               <folding />
             </state>
           </provider>
@@ -341,8 +338,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/validate_poi.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8287671">
-          <caret line="39" column="42" selection-start-line="39" selection-start-column="42" selection-end-line="39" selection-end-column="42" />
+        <state vertical-scroll-proportion="0.9315069">
+          <caret line="70" column="8" selection-start-line="70" selection-start-column="8" selection-end-line="70" selection-end-column="8" />
           <folding />
         </state>
       </provider>

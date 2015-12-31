@@ -40,3 +40,32 @@ pred = clf.predict(features_test)
 from sklearn.metrics import accuracy_score
 print 'Accuracy score = ', accuracy_score(labels_test, pred)
 
+print 'Predicted number of POI = ', sum(pred)
+print 'Size of test set = ', len(pred)
+
+# Assuming no POI identified
+fake_pred = [0] * len(pred)
+print 'Fake Accuracy = ', accuracy_score(labels_test, fake_pred)
+
+# How many true positives
+true_positives = 0
+for index in range(0, len(pred)):
+    if (int(pred[index]) & int(labels_test[index])):
+        true_positives +=  1
+print 'Number of True Positives = ', true_positives
+
+# Precision
+from sklearn.metrics import precision_score
+print 'Precision score = ', precision_score(labels_test, pred)
+
+# Recall
+from sklearn.metrics import recall_score
+print 'Recall score = ', recall_score(labels_test, pred)
+
+# Made-up predictions
+# predictions = [0, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1]
+# true labels = [0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0]
+# tp = 6
+# tn = 9
+# fn = 2
+# fp = 3
