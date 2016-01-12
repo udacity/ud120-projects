@@ -26,8 +26,21 @@ ages_train, ages_test, net_worths_train, net_worths_test = train_test_split(ages
 ### fill in a regression here!  Name the regression object reg so that
 ### the plotting code below works, and you can see what your regression looks like
 
+from sklearn import linear_model
 
+# Create linear regression object
+reg = linear_model.LinearRegression()
 
+# Train the model using the training sets
+reg.fit(ages_train, net_worths_train)
+
+# Test the model
+# reg.predict(feature_test)
+
+print('Coefficients: \n', reg.coef_)
+print('Intercept: \n', reg.intercept_)
+
+print('Variance score: %.4f' % reg.score(ages_test, net_worths_test))
 
 
 
@@ -77,6 +90,10 @@ if len(cleaned_data) > 0:
     plt.xlabel("ages")
     plt.ylabel("net worths")
     plt.show()
+
+    print('Coefficients: \n', reg.coef_)
+    print('Intercept: \n', reg.intercept_)
+    print('Variance score: %.4f' % reg.score(ages_test, net_worths_test))
 
 
 else:

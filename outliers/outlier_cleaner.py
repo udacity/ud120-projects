@@ -13,8 +13,16 @@ def outlierCleaner(predictions, ages, net_worths):
     
     cleaned_data = []
 
-    ### your code goes here
+    residual_errors = abs(predictions - net_worths)
+    sorted_errors = sorted(residual_errors)
 
-    
+    # Find largest error value that will be allowed
+    error_threshold = sorted_errors[int(0.9 * len(residual_errors) - 1)][0]
+    print "Error threshold:", error_threshold
+
+    for index in range(0, len(residual_errors)):
+        if residual_errors[index][0] <= error_threshold:
+            cleaned_data.append((ages[index][0], net_worths[index][0], residual_errors[index][0]))
+
     return cleaned_data
 
