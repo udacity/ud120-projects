@@ -27,10 +27,11 @@ features_train, features_test, labels_train, labels_test = preprocess()
 #########################################################
 ### your code goes here ###
 clf = tree.DecisionTreeClassifier(min_samples_split=40)
-clf.fit(features_train,features_test)
-predictions = clf.predict(labels_train)
+clf.fit(features_train,labels_train)
+predictions = clf.predict(features_test)
 acc = accuracy_score(labels_test,predictions)
 print(acc)
+print(len(features_train[0])) #numbers of features extracted
 #########################################################
 
 
