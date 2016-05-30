@@ -30,8 +30,12 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import accuracy_score as accuracy
 
 clf = GaussianNB()
+t0 = time()
 clf.fit(features_train, labels_train)
+print "training time:",round(time()-t0,3),"s"
+t0 = time()
 pred = clf.predict(features_test)
+print "prediction time:", round(time()-t0,3),"s"
 acc = accuracy(labels_test, pred)
 print("Classifier accuracy: ", acc)
 
