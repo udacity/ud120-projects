@@ -25,7 +25,6 @@ features_train, features_test, labels_train, labels_test = preprocess()
 #########################################################
 ### your code goes here ###
 print "num features", len(features_train[0])
-sys.exit()
 
 from sklearn.tree import DecisionTreeClassifier as DTC
 from sklearn.metrics import accuracy_score as accuracy
