@@ -13,6 +13,8 @@ import matplotlib.pyplot as plt
 import sys
 sys.path.append("../tools/")
 from feature_format import featureFormat, targetFeatureSplit
+from sklearn import preprocessing
+from sklearn.cluster import KMeans
 
 
 
@@ -44,33 +46,65 @@ data_dict = pickle.load( open("../final_project/final_project_dataset.pkl", "r")
 data_dict.pop("TOTAL", 0)
 
 
+def fit_scaler_on_original_data(data_dict, feature):
+    feature_not_NaN = []
+    for person in data_dict.keys():
+        if data_dict[person][feature] != "NaN":
+            feature_not_NaN.append(data_dict[person][feature])
+
+    scaler = preprocessing.MinMaxScaler()
+    scaler.fit(numpy.array(feature_not_NaN, dtype=numpy.float).reshape(-1, 1))
+
+    return scaler
+
 ### the input features we want to use 
 ### can be any key in the person-level dictionary (salary, director_fees, etc.) 
 feature_1 = "salary"
 feature_2 = "exercised_stock_options"
+#feature_3 = "total_payments"
 poi  = "poi"
+#features_list = [poi, feature_1, feature_2, feature_3]
 features_list = [poi, feature_1, feature_2]
 data = featureFormat(data_dict, features_list )
-poi, finance_features = targetFeatureSplit( data )
+
+# Fit a scaler on the original data (So we don't get deceived by the "NaN" points)
+feature_1_scaler = fit_scaler_on_original_data(data_dict, feature_1)
+feature_2_scaler = fit_scaler_on_original_data(data_dict, feature_2)
+
+# Rescale the data using the appropriate scaler
+rescaled_data = data
+rescaled_data[:, 1] = feature_1_scaler.transform(rescaled_data[:, 1].reshape(1, -1))
+rescaled_data[:, 2] = feature_2_scaler.transform(rescaled_data[:, 2].reshape(1, -1))
+
+poi, finance_features = targetFeatureSplit( rescaled_data )
 
 
 ### in the "clustering with 3 features" part of the mini-project,
 ### you'll want to change this line to 
 ### for f1, f2, _ in finance_features:
 ### (as it's currently written, the line below assumes 2 features)
-for f1, f2 in finance_features:
-    plt.scatter( f1, f2 )
-plt.show()
+#exercised_stock_options = []
+#for f1, f2 in finance_features:
+    #plt.scatter( f1, f2 )
+    #if(f1 != 0):
+        #exercised_stock_options.append(f1)
+#plt.show()
+
+#print(min(exercised_stock_options))
+#print(max(exercised_stock_options))
+
 
 ### cluster here; create predictions of the cluster labels
 ### for the data and store them to a list called pred
 
-
-
+pred = KMeans(n_clusters=2).fit_predict(finance_features)
 
 ### rename the "name" parameter when you change the number of features
 ### so that the figure gets saved to a different file
 try:
-    Draw(pred, finance_features, poi, mark_poi=False, name="clusters.pdf", f1_name=feature_1, f2_name=feature_2)
+   Draw(pred, finance_features, poi, mark_poi=False, name="clusters.pdf", f1_name=feature_1, f2_name=feature_2)
 except NameError:
-    print "no predictions object named pred found, no clusters to plot"
+   print "no predictions object named pred found, no clusters to plot"
+
+print "rescaled salary (200000.0) is:", feature_1_scaler.transform([[200000.0]])[0][0]
+print "rescaled exercised_stock_options (1000000.0) is:", feature_2_scaler.transform([[1000000.0]])[0][0]

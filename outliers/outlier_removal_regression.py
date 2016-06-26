@@ -27,21 +27,22 @@ ages_train, ages_test, net_worths_train, net_worths_test = train_test_split(ages
 ### the plotting code below works, and you can see what your regression looks like
 
 
+from sklearn import linear_model
 
+reg = linear_model.LinearRegression()
 
+reg.fit(ages_train, net_worths_train)
 
+print(reg.coef_)
+print(reg.intercept_)
+print(reg.score(ages_test, net_worths_test))
 
-
-
-
-
-
-try:
-    plt.plot(ages, reg.predict(ages), color="blue")
-except NameError:
-    pass
-plt.scatter(ages, net_worths)
-plt.show()
+# try:
+#     plt.plot(ages, reg.predict(ages), color="blue")
+# except NameError:
+#     pass
+# plt.scatter(ages, net_worths)
+# plt.show()
 
 
 ### identify and remove the most outlier-y points
@@ -54,11 +55,6 @@ except NameError:
     print "can't make predictions to use in identifying outliers"
 
 
-
-
-
-
-
 ### only run this code if cleaned_data is returning data
 if len(cleaned_data) > 0:
     ages, net_worths, errors = zip(*cleaned_data)
@@ -68,6 +64,8 @@ if len(cleaned_data) > 0:
     ### refit your cleaned data!
     try:
         reg.fit(ages, net_worths)
+        print(reg.coef_)
+        print(reg.score(ages_test, net_worths_test))
         plt.plot(ages, reg.predict(ages), color="blue")
     except NameError:
         print "you don't seem to have regression imported/created,"
