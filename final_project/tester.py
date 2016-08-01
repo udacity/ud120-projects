@@ -87,6 +87,10 @@ def load_classifier_and_data():
 def main():
     ### load up student's classifier, dataset, and feature_list
     clf, dataset, feature_list = load_classifier_and_data()
+    ### Print in console features and lable used:
+    print "Features used: \n        ",feature_list[1:]
+    print "Total features:",len(feature_list[1:])
+    print "Label used: ", feature_list[0]
     ### Run testing script
     test_classifier(clf, dataset, feature_list)
 
