@@ -38,7 +38,8 @@ def parseOutText(f):
         stemmer = SnowballStemmer("english")
         split_list = text_string.split()
         
-        roots_list=[stemmer.stem(item) for item in split_list]
+        roots_list=[stemmer.stem(item.strip()) for item in split_list]
+        roots_list = [item for item in roots_list if item != ""]
         words=" ".join(roots_list)
 
     return words

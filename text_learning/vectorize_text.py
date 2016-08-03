@@ -44,8 +44,8 @@ for name, from_person in [("sara", from_sara), ("chris", from_chris)]:
         ### only look at first 200 emails when developing
         ### once everything is working, remove this line to run over full dataset
 #==============================================================================
-#         temp_counter += 1
-#         if temp_counter < 2:
+        #temp_counter += 1
+        #if temp_counter < 100:
 #==============================================================================
         path = os.path.join('..', path[:-1])
         print (path)
@@ -60,7 +60,7 @@ for name, from_person in [("sara", from_sara), ("chris", from_chris)]:
         #text = ' '.join(result_words)
         for drop_word in from_words:
             text = text.replace(drop_word,"")
-        
+            text = ' '.join(text.split())
         ### append the text to word_data
         word_data.append(text)
         ### append a 0 to from_data if email is from Sara, and 1 if email is from Chris
@@ -80,8 +80,10 @@ pickle.dump( word_data, open("your_word_data.pkl", "wb") )
 pickle.dump( from_data, open("your_email_authors.pkl", "wb") )
 # 
 #==============================================================================
-
+print ("len word_data %d" % len(word_data))
 ### in Part 4, do TfIdf vectorization here
-vectorizer = TfidfVectorizer(stop_words=stopwords.words('english'), lowercase=True)
+vectorizer = TfidfVectorizer(stop_words="english", lowercase=True)
 vectorizer.fit_transform(word_data)
-print (len(vectorizer.get_feature_names()))
+vocab_list = vectorizer.get_feature_names()
+print ("vocab_list pos 34597 %s" % vocab_list[34597])
+print ("len features %d" % len(vocab_list))
