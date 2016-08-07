@@ -36,7 +36,7 @@ except Exception:
 ### visualization code (prettyPicture) to show you the decision boundary
 from sklearn.neighbors import KNeighborsClassifier as KNN
 from sklearn.metrics import accuracy_score as accuracy
-clf = KNN()
+clf = KNN(n_neighbors=10, weights='distance')
 
 t0 = time()
 clf.fit(features_train, labels_train)
