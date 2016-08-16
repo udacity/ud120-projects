@@ -55,7 +55,7 @@ for name, from_person in [("sara", from_sara), ("chris", from_chris)]:
         text = parseOutText(email)
         #text_split = text.split()
         ### use str.replace() to remove any instances of the words
-        from_words = ["sara", "shackleton", "chris", "germani"]
+        from_words = ["sara", "shackleton", "chris", "germani","sshacklensf","cgermannsf"]
         #result_words = [word for word in text_split if word.lower() not in from_words]
         #text = ' '.join(result_words)
         for drop_word in from_words:
