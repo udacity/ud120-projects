@@ -29,8 +29,11 @@ data = featureFormat(data_dict, features_list,sort_keys = '../tools/python2_less
 labels, features = targetFeatureSplit(data)
 
 ### it's all yours from here forward!  
+X_train, X_test, y_train, y_test = train_test_split(
+    features, labels, test_size=0.3, random_state=42)
+
 clf = tree.DecisionTreeClassifier()
-clf = clf.fit(features, labels)
-pred = clf.predict(features)
-print ("Accuracy score:", accuracy_score(pred,labels))
+clf = clf.fit(X_train, y_train)
+pred = clf.predict(X_test)
+print ("Accuracy score:", accuracy_score(pred,y_test))
 
