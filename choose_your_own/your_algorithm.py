@@ -24,7 +24,6 @@ plt.scatter(grade_slow, bumpy_slow, color = "r", label="slow")
 plt.legend()
 plt.xlabel("bumpiness")
 plt.ylabel("grade")
-plt.show()
 ################################################################################
 
 
@@ -42,3 +41,5 @@ try:
     prettyPicture(clf, features_test, labels_test)
 except NameError:
     pass
+
+plt.show()
