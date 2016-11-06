@@ -16,11 +16,22 @@
 """
 
 import pickle
+
 import math
 
 enron_data = pickle.load(open("../final_project/final_project_dataset.pkl", "r"))
 
 count = 0
+
+import pandas as pd
+
+import numpy as np
+
+enron_data = pickle.load(open("../final_project/final_project_dataset.pkl", "r"))
+
+print  enron_data["SKILLING JEFFREY K"]
+
+
 
 for person in enron_data:
     count = count+1
