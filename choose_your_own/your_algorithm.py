@@ -31,12 +31,34 @@ plt.show()
 ### your code here!  name your classifier object clf if you want the 
 ### visualization code (prettyPicture) to show you the decision boundary
 
+from sklearn.svm import SVC
+
+clf_svc = SVC(kernel = 'rbf')
+clf_svc.fit(features_train,labels_train)
+print "score for SVC is %f" %clf_svc.score(features_test,labels_test)
 
 
+from sklearn.naive_bayes import GaussianNB
+
+clf = GaussianNB()
+
+clf.fit(features_train,labels_train)
+print "score for Naive Bayes is %f" %clf.score(features_test,labels_test)
+
+from sklearn import tree
+
+clf = tree.DecisionTreeClassifier(min_samples_split=10)
+clf.fit(features_train,labels_train)
+print "score for Decision Tree is %f" %clf.score(features_test,labels_test)
 
 
+from sklearn.ensemble import AdaBoostClassifier
 
+from sklearn.ensemble import RandomForestClassifier
 
+clf = AdaBoostClassifier(n_estimators=20, learning_rate = 2)
+clf.fit(features_train,labels_train)
+print "score for AdaBoost Classifier is %f" %clf.score(features_test,labels_test)
 
 try:
     prettyPicture(clf, features_test, labels_test)
