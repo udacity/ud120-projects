@@ -8,7 +8,6 @@ from sklearn import cross_validation
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_selection import SelectPercentile, f_classif
 
-print "are you seeing this"
 
 
 def preprocess(words_file = "../tools/word_data.pkl", authors_file="../tools/email_authors.pkl"):
@@ -54,13 +53,13 @@ def preprocess(words_file = "../tools/word_data.pkl", authors_file="../tools/ema
 
     ### feature selection, because text is super high dimensional and 
     ### can be really computationally chewy as a result
-    selector = SelectPercentile(f_classif, percentile=1)
+    selector = SelectPercentile(f_classif, percentile=10)
     selector.fit(features_train_transformed, labels_train)
     features_train_transformed = selector.transform(features_train_transformed).toarray()
     features_test_transformed  = selector.transform(features_test_transformed).toarray()
 
     ### info on the data
-    #print "hadd chutiyaap", sum(labels_train)
-    #print "no. of Sara training emails:", len(labels_train)-sum(labels_train)
+    print "no. of Chris training emails:", sum(labels_train)
+    print "no. of Sara training emails:", len(labels_train)-sum(labels_train)
     
     return features_train_transformed, features_test_transformed, labels_train, labels_test
