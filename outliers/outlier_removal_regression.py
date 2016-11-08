@@ -11,6 +11,9 @@ reload(outlier_cleaner)
 from outlier_cleaner import outlierCleaner
 
 
+reload(outlier_cleaner)
+from outlier_cleaner import outlierCleaner
+
 ### load up some practice data with outliers in it
 ages = pickle.load( open("practice_outliers_ages.pkl", "r") )
 net_worths = pickle.load( open("practice_outliers_net_worths.pkl", "r") )
@@ -53,13 +56,16 @@ plt.show()
 cleaned_data = []
 try:
     predictions = reg.predict(ages_train)
-   # print pd.DataFrame(predictions,ages_train, net_worths_train)
+
     cleaned_data = outlierCleaner( predictions, ages_train, net_worths_train )
+    #cleaned_data = [(1,1,1), (3,2,1), (5,2,1)]
     
+
     print len(cleaned_data)
     
     #print cleaned_data[0:5]
     
+
     #cleaned_data = [1,2,2,4]
 except NameError:
     print "your regression object doesn't exist, or isn't name reg"
