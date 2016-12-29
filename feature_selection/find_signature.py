@@ -27,6 +27,8 @@ vectorizer = TfidfVectorizer(sublinear_tf=True, max_df=0.5,
                              stop_words='english')
 features_train = vectorizer.fit_transform(features_train)
 features_test  = vectorizer.transform(features_test).toarray()
+featureNames = vectorizer.get_feature_names()[14343]
+print(featureNames)
 
 
 ### a classic way to overfit is to use a small number
@@ -36,8 +38,22 @@ features_train = features_train[:150].toarray()
 labels_train   = labels_train[:150]
 
 
+from sklearn import tree
+from sklearn.metrics import accuracy_score
+clf = tree.DecisionTreeClassifier(min_samples_split=40)
 
-### your code goes here
+clf = clf.fit(features_train, labels_train)
 
+pred = clf.predict(features_test, labels_test)
+
+acc = accuracy_score(pred, labels_test)
+print "acc:", acc
+
+##Identify the Most Powerful Features
+
+for impt_num, impt in enumerate(clf.feature_importances_):
+    if impt > 0.2:
+        print "Most powerful feature is",impt
+        print "Position is", impt_num
 
 
