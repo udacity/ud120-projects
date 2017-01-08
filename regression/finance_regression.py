@@ -17,7 +17,7 @@ import sys
 import pickle
 sys.path.append("../tools/")
 from feature_format import featureFormat, targetFeatureSplit
-dictionary = pickle.load( open("../final_project/final_project_dataset_modified.pkl", "r") )
+dictionary = pickle.load( open("../final_project/final_project_dataset_modified.pkl", "rb"), fix_imports=True )
 
 ### list the features you want to look at--first item in the 
 ### list will be the "target" feature
