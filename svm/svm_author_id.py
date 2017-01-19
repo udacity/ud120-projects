@@ -18,7 +18,15 @@ from email_preprocess import preprocess
 ### and testing datasets, respectively
 ### labels_train and labels_test are the corresponding item labels
 features_train, features_test, labels_train, labels_test = preprocess()
+from sklearn.svm import SVC
+clf=SVC(kernel="linear")
+clf.fit(features_train, features_test)
+pred=clf.predict(labels_train)
+print(pred)
 
+from sklearn.metrics import accuracy_score
+
+print(accuracy_score(pred,labels_test))
 
 
 
