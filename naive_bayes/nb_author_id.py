@@ -26,7 +26,25 @@ features_train, features_test, labels_train, labels_test = preprocess()
 
 #########################################################
 ### your code goes here ###
+from sklearn.naive_bayes import GaussianNB
+clf = GaussianNB()
+t0 = time()
+clf.fit(features_train, labels_train)
+print "training time:", round(time() - t0, 3), "s"
+t1 = time()
+labels_predict = clf.predict(features_test)
+print "testing time:", round(time() - t1, 3), "s"
 
+index = 0
+counter = 0
+for val in labels_predict:
+    if labels_predict[index] == labels_test[index]:
+        counter += 1
+    index += 1
+
+print "number correct:", counter
+print "total given:", len(labels_test)
+print "probability correct:", counter / float(len(labels_test))
 
 #########################################################
 
