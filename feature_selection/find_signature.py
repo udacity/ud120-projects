@@ -2,6 +2,8 @@
 
 import pickle
 import numpy
+from sklearn import tree
+from sklearn.metrics import accuracy_score
 numpy.random.seed(42)
 
 
@@ -10,8 +12,8 @@ numpy.random.seed(42)
 ### mini-project.
 words_file = "../text_learning/your_word_data.pkl" 
 authors_file = "../text_learning/your_email_authors.pkl"
-word_data = pickle.load( open(words_file, "r"))
-authors = pickle.load( open(authors_file, "r") )
+word_data = pickle.load( open(words_file, "rb"))
+authors = pickle.load( open(authors_file, "rb") )
 
 
 
@@ -38,6 +40,17 @@ labels_train   = labels_train[:150]
 
 
 ### your code goes here
+clf = tree.DecisionTreeClassifier(min_samples_split=40)
+clf = clf.fit(features_train, labels_train)
+pred = clf.predict(features_test)
+print ("Accuracy score:", accuracy_score(pred,labels_test))
 
+print ("Number of features:", len(features_train[0]) )
 
-
+for index in range(len(clf.feature_importances_)):
+    importance = clf.feature_importances_[index]   
+    if importance > 0.2 :
+        word = vectorizer.get_feature_names()[index]
+        print ("feature %d has importance %f, word is %s" % (index,importance,word))
+        
+        

@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 import sys
 sys.path.append("../tools/")
 from feature_format import featureFormat, targetFeatureSplit
-
+from sklearn.preprocessing import MinMaxScaler
 
 
 
@@ -39,7 +39,7 @@ def Draw(pred, features, poi, mark_poi=False, name="image.png", f1_name="feature
 
 
 ### load in the dict of dicts containing all the data on each person in the dataset
-data_dict = pickle.load( open("../final_project/final_project_dataset.pkl", "r") )
+data_dict = pickle.load( open("../final_project/final_project_dataset.pkl", "rb") )
 ### there's an outlier--remove it! 
 data_dict.pop("TOTAL", 0)
 
@@ -64,6 +64,34 @@ plt.show()
 
 ### cluster here; create predictions of the cluster labels
 ### for the data and store them to a list called pred
+from sklearn.cluster import KMeans
+from operator import itemgetter
+print (max(finance_features,key=itemgetter(1))[1])
+print (min(finance_features,key=itemgetter(1))[1])
+
+max_value=0
+for d in data_dict.keys():
+    v = data_dict[d]["salary"]
+    if v=='NaN' : continue
+    v = int(v) 
+    if v>max_value:
+        max_value=v
+print(max_value)
+
+min_value=max_value
+for d in data_dict.keys():
+    v = data_dict[d]["salary"]
+    if v=='NaN' : continue
+    v = int(v) 
+    if v<min_value:
+        min_value=v
+print(min_value)
+
+scaler = MinMaxScaler()
+scaler.fit(finance_features)
+print (scaler.transform([[200000.,1000000.]]))
+
+pred = KMeans(n_clusters=2).fit_predict(finance_features)
 
 
 
@@ -71,6 +99,6 @@ plt.show()
 ### rename the "name" parameter when you change the number of features
 ### so that the figure gets saved to a different file
 try:
-    Draw(pred, finance_features, poi, mark_poi=False, name="clusters.pdf", f1_name=feature_1, f2_name=feature_2)
+    Draw(pred, finance_features, poi, mark_poi=False, name="clusters_2.pdf", f1_name=feature_1, f2_name=feature_2)
 except NameError:
-    print "no predictions object named pred found, no clusters to plot"
+    print ("no predictions object named pred found, no clusters to plot")
