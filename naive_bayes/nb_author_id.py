@@ -41,7 +41,9 @@ for i in range(total):
         errors+=1
 correct=float(total-errors)
 accuracy=correct/total
+
 total=float(total)
+
 print clf.score(features_test, labels_test)
 
 
