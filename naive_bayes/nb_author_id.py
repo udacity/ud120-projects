@@ -33,7 +33,7 @@ clf=GaussianNB()
 clf.fit(features_train,labels_train)
 predictions=clf.predict(features_test)
 
-total=float(len(labels_test))
+total=(len(labels_test))
 errors=0
 
 for i in range(total):
@@ -41,6 +41,7 @@ for i in range(total):
         errors+=1
 correct=float(total-errors)
 accuracy=correct/total
+total=float(total)
 print clf.score(features_test, labels_test)
 
 
