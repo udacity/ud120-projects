@@ -31,7 +31,6 @@ def get_nb_accuracy():
     accuracy = clf.score(features_test, labels_test)
     return accuracy
 
-
 print get_nb_accuracy()
 
 
