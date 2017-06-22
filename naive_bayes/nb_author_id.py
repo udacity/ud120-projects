@@ -26,10 +26,18 @@ features_train, features_test, labels_train, labels_test = preprocess()
 
 #########################################################
 ### your code goes here ###
-classifier = GaussianNB()
-classifier.fit(features_train, labels_train)
-classifier.predict(features_test)
-print(classifier.score(features_test, labels_test))
+
+classifier = GaussianNB() #instantiate Naive Bayes classifier
+
+t0 = time()
+classifier.fit(features_train, labels_train) #train the classifier
+print "training time:", round(time()-t0, 3), "s"
+
+t1 = time()
+classifier.predict(features_test) #make predictions on test data
+print "prediction time:", round(time()-t1, 3), "s"
+
+print "accuracy:", classifier.score(features_test, labels_test) #score classifier accuracy
 
 
 #########################################################
