@@ -7,6 +7,9 @@ import sys
 
 sys.path.append( "../tools/" )
 from parse_out_email_text import parseOutText
+from nltk.corpus import stopwords
+from sklearn.feature_extraction import stop_words
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 """
     Starter code to process the emails from Sara and Chris to extract
@@ -36,24 +39,32 @@ word_data = []
 ### can iterate your modifications quicker
 temp_counter = 0
 
+removeWords = ["sara", "shackleton", "chris", "germani", "sshacklensf", "cgermannsf", "houectect"]
 
 for name, from_person in [("sara", from_sara), ("chris", from_chris)]:
     for path in from_person:
         ### only look at first 200 emails when developing
         ### once everything is working, remove this line to run over full dataset
-        temp_counter += 1
-        if temp_counter < 200:
+        # temp_counter += 1
+        # if temp_counter < 200:
             path = os.path.join('..', path[:-1])
             print path
             email = open(path, "r")
 
             ### use parseOutText to extract the text from the opened email
-
+            words = parseOutText(email)
+            for w in removeWords:
+                words = words.replace(w, "")
             ### use str.replace() to remove any instances of the words
             ### ["sara", "shackleton", "chris", "germani"]
 
+            word_data.append(words)
             ### append the text to word_data
 
+            if name == "sara":
+                from_data.append(0)
+            else:
+                from_data.append(1)
             ### append a 0 to from_data if email is from Sara, and 1 if email is from Chris
 
 
@@ -66,10 +77,9 @@ from_chris.close()
 pickle.dump( word_data, open("your_word_data.pkl", "w") )
 pickle.dump( from_data, open("your_email_authors.pkl", "w") )
 
+vectorizer = TfidfVectorizer(stop_words="english", lowercase=True)
+vectorized_word_data = vectorizer.fit_transform(word_data)
+vocab_list = vectorizer.get_feature_names()
 
-
-
-
-### in Part 4, do TfIdf vectorization here
-
-
+print(len(vocab_list)) #output is 38757
+print(vocab_list[34597]) #output is "stephaniethank"
