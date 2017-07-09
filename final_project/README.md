@@ -51,3 +51,20 @@ Plot all data points Salary/Bonus, removed the total data point as it is the sum
 ![no_outlier](./outlier_without_total.png "With outlier")
 
 ## 3.
+```
+### Task 3: Create new feature(s)
+```
+
+Added two new features giving the ratio of emails going to/from this person to a POI
+"from_this_person_to_poi", "from_poi_to_this_person", "shared_receipt_with_poi", "to_messages", "from_messages"
+
+| Feature   |  Zero/Nan total Count | % of all data points is either NaN/0 |
+| --------- | --------------------- | ------------------------------------ |
+| ratio_from_to_poi |   78  | 54.1666666667 |
+| ratio_to_from_poi |   70  | 48.6111111111 |
+
+Compared to the best existing features in feature selection
+
+![Chart](./new_features_feature_selection.png "New features")
+
+Conclusion is that the feature ```from_this_person_to_poi``` looks to perform better than ```ratio_to_from_poi```

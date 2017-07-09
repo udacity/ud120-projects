@@ -20,6 +20,10 @@ with open("final_project_dataset.pkl", "r") as data_file:
 ### Task 2: Remove outliers
 ### Task 3: Create new feature(s)
 ### Store to my_dataset for easy export below.
+for data in data_dict:
+    data["ratio_from_to_poi"] = float(data["from_this_person_to_poi"]) / data["from_messages"]
+    data["ratio_to_from_poi"] = float(data["from_poi_to_this_person"]) / data["to_messages"]
+
 my_dataset = data_dict
 data_dict.pop("TOTAL", 0)
 
