@@ -68,3 +68,13 @@ Compared to the best existing features in feature selection
 ![Chart](./new_features_feature_selection.png "New features")
 
 Conclusion is that the feature ```from_this_person_to_poi``` looks to perform better than ```ratio_to_from_poi```
+
+
+## 4.
+```
+### Task 4: Try a varity of classifiers
+### Please name your classifier clf for easy export below.
+### Note that if you want to do PCA or other multi-stage operations,
+### you'll need to use Pipelines. For more info:
+### http://scikit-learn.org/stable/modules/pipeline.html
+```
