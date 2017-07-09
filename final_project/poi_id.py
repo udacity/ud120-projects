@@ -5,15 +5,18 @@ import pickle
 import numpy as np
 sys.path.append("../tools/")
 
+from sklearn.metrics import f1_score
 from feature_format import featureFormat, targetFeatureSplit
 from tester import dump_classifier_and_data
 from sklearn.naive_bayes import GaussianNB
+from sklearn.tree import DecisionTreeClassifier
 from sklearn import preprocessing
 from sklearn.pipeline import Pipeline
 from sklearn.decomposition import PCA
 from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.feature_selection import SelectKBest, f_classif
 from sklearn.model_selection import GridSearchCV
+from sklearn.svm import SVC
 
 ### Task 1: Select what features you'll use.
 ### features_list is a list of strings, each of which is a feature name.
@@ -61,24 +64,40 @@ SCALER = [None, preprocessing.StandardScaler()]
 SELECTOR__K = [10, 'all']
 REDUCER__N_COMPONENTS = [2, 4, 6, 8, 10]
 
-param_grid = {
+default_param_grid = {
     'scaler': SCALER,
     'selector__k': SELECTOR__K,
     'reducer__n_components': REDUCER__N_COMPONENTS
 }
 
-pipe = Pipeline([
+default_pipline = [
         ('scaler', preprocessing.StandardScaler()),
         ('selector', SelectKBest()),
-        ('reducer', PCA(random_state=42)),
-        ('classifier', GaussianNB())
-    ])
+        ('reducer', PCA(random_state=42))
+]
 
-# PARAMS scoring selects the f1 scoring algo
-# cv : int, cross-validation generator or an iterable, optional
-# f1 evaluating based on  recall and precision.
-sss = StratifiedShuffleSplit(n_splits=10, test_size=0.2, random_state=42)
-grid_search = GridSearchCV(pipe, param_grid=param_grid,  scoring='f1', cv=sss, verbose=0)
+classifiers = {
+    'navie_bays': {
+        'classifier': GaussianNB()
+    },
+    'decision_tree': {
+        'classifier': DecisionTreeClassifier(),
+        'parameters': {
+            'classifier__criterion': ['gini'],
+            'classifier__splitter': ['random'],
+            'classifier__min_samples_split': [2, 4, 6, 8, 10, 12, 14, 16, 20, 30, 50],
+            'classifier__class_weight': ['balanced', None]
+        }
+    },
+    'support_vector_machine': {
+        'classifier': SVC(kernel='rbf', class_weight='balanced'),
+        'parameters': {
+            'classifier__C': [1e3, 5e3, 1e4, 5e4, 1e5],
+            'classifier__gamma': [0.0001, 0.0005, 0.001, 0.005, 0.01, 0.1],
+        }
+    }
+}
+
 
 ### Task 5: Tune your classifier to achieve better than .3 precision and recall
 ### using our testing script. Check the tester.py script in the final project
@@ -92,11 +111,45 @@ from sklearn.cross_validation import train_test_split
 features_train, features_test, labels_train, labels_test = \
     train_test_split(features, labels, test_size=0.3, random_state=42)
 
-grid_search.fit(np.array(features_train), np.array(labels_train))
+# PARAMS scoring selects the f1 scoring algo
+# cv : int, cross-validation generator or an iterable, optional
+# f1 evaluating based on  recall and precision.
+def fit_and_score(key, pipeline, param_grid):
+    sss = StratifiedShuffleSplit(n_splits=10, test_size=0.2, random_state=42)
+    grid_search = GridSearchCV(pipe, param_grid=param_grid,  scoring='f1', cv=sss, verbose=0)
+    grid_search.fit(np.array(features_train), np.array(labels_train))
+    pred = grid_search.best_estimator_.predict(features_test)
+    score = f1_score(labels_test, pred)
+    print "f1 score for classifier ### ", key, ' #### - ', score
+    print "best parameter------------------"
+    print  grid_search.best_params_
+    print "-----------------"
+
+    return (grid_search.best_estimator_, score)
+
+
+best_classifier_score = 0
+best_classifier = 0
+for classifierKey in classifiers:
+    classifierData = classifiers[classifierKey]
+    classifier = classifierData['classifier']
+
+    parameters = classifierData.get('parameters')
+
+    pipelineData = default_pipline[:]
+    pipelineData.append(('classifier', classifier))
+    pipe = Pipeline(pipelineData)
+    param = dict(default_param_grid)
+    if (parameters != None):
+        param.update(parameters)
+
+    (clf, score) = fit_and_score(classifierKey, pipe, param)
+    if (score > best_classifier_score):
+        best_classifier = clf
+
 
 ### Task 6: Dump your classifier, dataset, and features_list so anyone can
 ### check your results. You do not need to change anything below, but make sure
 ### that the version of poi_id.py that you submit can be run on its own and
 ### generates the necessary .pkl files for validating your results.
-
-dump_classifier_and_data(grid_search.best_estimator_, my_dataset, features_list)
+dump_classifier_and_data(best_classifier, my_dataset, features_list)

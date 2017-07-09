@@ -73,8 +73,75 @@ Conclusion is that the feature ```from_this_person_to_poi``` looks to perform be
 ## 4.
 ```
 ### Task 4: Try a varity of classifiers
-### Please name your classifier clf for easy export below.
-### Note that if you want to do PCA or other multi-stage operations,
-### you'll need to use Pipelines. For more info:
-### http://scikit-learn.org/stable/modules/pipeline.html
 ```
+
+This needs to be a supervised classifier, since the label we want is a binary output. Either a POI or not.
+### Naive Bays
+It is simple, and ignores order, gives fairly good performance using f1 scoring
+
+## Decision true_negatives
+
+parameters
+min_simple_split, the size of the leaf node
+entropy, how it divides and select data
+
+
+## Support Vector Machine
+Finds hyper plane (line) between classes,
+
+parameters
+c - is the tradeoff between smooth and pointy accuracy
+gamma - how inferrence by a single point
+kernel - rbf/linear
+
+| Classifier   |  Best F1 Score|
+| --------- | --------------------- |
+| Navie Bays |   0.5 |
+| Decision Tree |  0.352941176471  |
+| SVM |  0.2  |
+
+
+With the best classifer Navie Bays is the output
+
+Accuracy: 0.68720	Precision: 0.26118	Recall: 0.73600	F1: 0.38554	F2: 0.53975 Total predictions: 15000	True positives: 1472	False positives: 4164	False negatives:  528	True negatives: 8836
+
+## 5 Tune
+
+
+### Decision Tree
+
+```
+{
+  'min_samples_split': 12,
+  'class_weight': 'balanced',
+  'splitter': 'random',
+  'criterion': 'gini'
+}
+```
+
+### Navie Bays
+Navie Bays is untuned, since it does not provide a lot of parameters to play around with.
+```
+{
+}
+```
+
+### Support Vector Machine
+```
+{
+  'gamma': 0.005,
+  'C': 100000.0
+}
+```
+
+### Validation
+I used f1 validation which combines precision and recall. This gives a more balanced score between being right, and false positives. In general having a good validation method is important to test if it actually finds the things you want, in our case POI. 
+
+## 6 Output
+
+ipeline(steps=[('scaler', StandardScaler(copy=True, with_mean=True, with_std=True)), ('selector', SelectKBest(k='all', score_func=<function f_classif at 0x104dcc5f0>)), ('reducer', PCA(copy=True, iterated_power='auto', n_components=2, random_state=42,
+  svd_solver='auto', tol=0.0, whiten=False)), ('classifi...,
+  max_iter=-1, probability=False, random_state=None, shrinking=True,
+  tol=0.001, verbose=False))])
+	Accuracy: 0.68720	Precision: 0.26118	Recall: 0.73600	F1: 0.38554	F2: 0.53975
+	Total predictions: 15000	True positives: 1472	False positives: 4164	False negatives:  528	True negatives: 8836
