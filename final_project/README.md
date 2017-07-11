@@ -1,12 +1,12 @@
 
-##1
+## 1 Select Features
 ```
 ### Task 1: Select what features you'll use.
 ### features_list is a list of strings, each of which is a feature name.
 ### The first feature must be "poi".
 ```
 
-1. Eliminate all features that does not really have any data
+1 Eliminate all features that does not really have any data
 
 | Feature   |  Zero/Nan total Count | % of all data points is either NaN/0 |
 | --------- | --------------------- | ------------------------------------ |
@@ -34,13 +34,13 @@
 Chose to remove everything where more then 60% 0 or NaN data points, where a 0 does not make sense. Which is the case for POI.
 
 
-2. Using SelectKBest To select the top features
+2 Using SelectKBest To select the top features
 
 ![Chart](./SelecktKBest_features.png "Best features")
 
 Conclusion: I will use SelectKBest as part of the pipline and will include all features where the data has mare than 60% 0/NaN values.
 
-## 2.
+## 2. Remove Outliers
 ```
 ### Task 2: Remove outliers
 ```
@@ -50,7 +50,7 @@ Plot all data points Salary/Bonus, removed the total data point as it is the sum
 ![outlier](./outlier_with_total.png "With outlier")
 ![no_outlier](./outlier_without_total.png "With outlier")
 
-## 3.
+## 3. Create new features
 ```
 ### Task 3: Create new feature(s)
 ```
@@ -70,7 +70,7 @@ Compared to the best existing features in feature selection
 Conclusion is that the feature ```from_this_person_to_poi``` looks to perform better than ```ratio_to_from_poi```
 
 
-## 4.
+## 4. Try classifiers
 ```
 ### Task 4: Try a varity of classifiers
 ```
@@ -94,6 +94,11 @@ c - is the tradeoff between smooth and pointy accuracy
 gamma - how inferrence by a single point
 kernel - rbf/linear
 
+
+### Result
+
+I tried three classifier with several different parameters. The standard poi_id script tries all of them and picks the best (it is always Naive Bays). Here are the best f1 scores for each of them, I was able to achieve.
+
 | Classifier   |  Best F1 Score|
 | --------- | --------------------- |
 | Navie Bays |   0.5 |
@@ -101,12 +106,7 @@ kernel - rbf/linear
 | SVM |  0.2  |
 
 
-With the best classifer Navie Bays is the output
-
-Accuracy: 0.68720	Precision: 0.26118	Recall: 0.73600	F1: 0.38554	F2: 0.53975 Total predictions: 15000	True positives: 1472	False positives: 4164	False negatives:  528	True negatives: 8836
-
 ## 5 Tune
-
 
 ### Decision Tree
 
@@ -120,7 +120,7 @@ Accuracy: 0.68720	Precision: 0.26118	Recall: 0.73600	F1: 0.38554	F2: 0.53975 Tot
 ```
 
 ### Navie Bays
-Navie Bays is untuned, since it does not provide a lot of parameters to play around with.
+Navie Bays is untuned, since it so simple.
 ```
 {
 }
@@ -135,13 +135,17 @@ Navie Bays is untuned, since it does not provide a lot of parameters to play aro
 ```
 
 ### Validation
-I used f1 validation which combines precision and recall. This gives a more balanced score between being right, and false positives. In general having a good validation method is important to test if it actually finds the things you want, in our case POI. 
+I used f1 validation which combines precision and recall. This gives a more balanced score between being right, and false positives. In general having a good validation method is important to test if it actually finds the things you want, in our case POI.
 
 ## 6 Output
 
-ipeline(steps=[('scaler', StandardScaler(copy=True, with_mean=True, with_std=True)), ('selector', SelectKBest(k='all', score_func=<function f_classif at 0x104dcc5f0>)), ('reducer', PCA(copy=True, iterated_power='auto', n_components=2, random_state=42,
-  svd_solver='auto', tol=0.0, whiten=False)), ('classifi...,
-  max_iter=-1, probability=False, random_state=None, shrinking=True,
-  tol=0.001, verbose=False))])
+```
 	Accuracy: 0.68720	Precision: 0.26118	Recall: 0.73600	F1: 0.38554	F2: 0.53975
 	Total predictions: 15000	True positives: 1472	False positives: 4164	False negatives:  528	True negatives: 8836
+```
+
+
+### References
+Sklearn http://scikit-learn.org/stable/
+Feature scaling http://sebastianraschka.com/Articles/2014_about_feature_scaling.html
+http://luizschiller.com/enron/
