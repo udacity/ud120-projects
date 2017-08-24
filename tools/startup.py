@@ -33,7 +33,6 @@ print "download will complete at about 423 MB"
 import urllib
 url = "https://www.cs.cmu.edu/~./enron/enron_mail_20150507.tar.gz"
 urllib.urlretrieve(url, filename="../enron_mail_20150507.tgz") 
-
 print "download complete!"
 
 print
