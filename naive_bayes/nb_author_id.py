@@ -27,6 +27,9 @@ features_train, features_test, labels_train, labels_test = preprocess()
 #########################################################
 ### your code goes here ###
 
+### Use features_train & labels_train to train your classifier
+
+### Test the classifier using features_test & labels_test 
 
 #########################################################
 
