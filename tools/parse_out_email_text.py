@@ -2,6 +2,7 @@
 
 from nltk.stem.snowball import SnowballStemmer
 import string
+import re
 
 def parseOutText(f):
     """ given an opened email file f, parse out all text below the
@@ -25,7 +26,7 @@ def parseOutText(f):
     words = ""
     if len(content) > 1:
         ### remove punctuation
-        text_string = content[1].translate(string.maketrans("", ""), string.punctuation)
+        text_string = re.sub('[' + string.punctuation + ']', '', content[1])
 
         ### project part 2: comment out the line below
         words = text_string
