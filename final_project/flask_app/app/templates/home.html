@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content_title %}Enron fraud detection{% endblock %}
+{% block content %}
+<br>
+{% for param in params %}
+<button type="button" class="btn btn-primary btn-sm" data-toggle="button" name="options" id={{param}} autocomplete="off">
+    {{param}}
+</button>
+{% endfor %}
+<p>
+<button type="button" class="btn btn-secondary btn-sm" name="options" id="Plot" autocomplete="off">
+Plot
+</button>
+<button type="button" class="btn btn-secondary btn-sm" name="options" id="Clear" autocomplete="off">
+Clear
+</button>
+<svg width="800" height="400"></svg>
+<script src="../static/js/d3.js"></script>
+<script src="../static/js/plot_data.js"></script>
+{% endblock %}
