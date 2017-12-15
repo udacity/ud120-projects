@@ -12,9 +12,8 @@
 
 import pickle
 import sys
-from sklearn import svm
-
-from sklearn.cross_validation import StratifiedShuffleSplit
+import numpy as np
+from sklearn.model_selection import StratifiedShuffleSplit
 from helper import  _scale_data
 sys.path.append("../tools/")
 from feature_format import featureFormat, targetFeatureSplit
@@ -30,15 +29,15 @@ def test_classifier(clf, dataset, feature_list, folds = 50):
     labels, features = targetFeatureSplit(data)
     features = _scale_data(features)
     print('shape features: {0}'.format(features.shape))
-    cv = StratifiedShuffleSplit(labels, folds, test_size=0.25, random_state=42)
+    cv = StratifiedShuffleSplit(n_splits=folds, test_size=0.25, random_state=42)
     true_negatives = 0
     false_negatives = 0
     true_positives = 0
     false_positives = 0
-    i = 0
-    for train_idx, test_idx in cv:
-        print(i)
-        i += 1
+    accuracy_list = []
+    precision_list = []
+    recall_list = []
+    for train_idx, test_idx in cv.split(features, labels):
         features_train = []
         features_test  = []
         labels_train   = []
@@ -51,7 +50,6 @@ def test_classifier(clf, dataset, feature_list, folds = 50):
             labels_test.append( labels[jj] )
         
         ### fit the classifier using training set, and test on test set
-        print('fitting ...')
         clf.fit(features_train, labels_train)
         predictions = clf.predict(features_test)
         for prediction, truth in zip(predictions, labels_test):
@@ -68,24 +66,48 @@ def test_classifier(clf, dataset, feature_list, folds = 50):
                 print("All predictions should take value 0 or 1.")
                 print("Evaluating performance for processed predictions:")
                 break
+        accuracy, recall, precision = _calculate_scores(true_positives, true_negatives, false_positives, false_negatives)
+        accuracy_list.append(accuracy)
+        recall_list.append(recall)
+        precision_list.append(precision)
     try:
+        myscores = {'accuracy': accuracy_list, 'recall': recall_list, 'precision': precision_list}
+        for k, v in myscores.items():
+            mean, std = _get_mean_and_std(v)
+            print('{0}: {1:.3f} +/- {2:.3f}'.format(k, mean, std))
         total_predictions = true_negatives + false_negatives + false_positives + true_positives
-        print('total predictions: {0}'.format(total_predictions))
         accuracy = 1.0*(true_positives + true_negatives)/total_predictions
-        print('accuracy: {0}'.format(accuracy))
         precision = 1.0*true_positives/(true_positives+false_positives)
-        print('precision: {0}'.format(precision))
         recall = 1.0*true_positives/(true_positives+false_negatives)
-        print('recall: {0}'.format(recall))
         f1 = 2.0 * true_positives/(2*true_positives + false_positives+false_negatives)
         f2 = (1+2.0*2.0) * precision*recall/(4*precision + recall)
         print(clf)
         print(PERF_FORMAT_STRING.format(accuracy, precision, recall, f1, f2, display_precision = 5))
         print(RESULTS_FORMAT_STRING.format(total_predictions, true_positives, false_positives, false_negatives, true_negatives))
         print("")
-    except:
+    except ZeroDivisionError as err:
         print("Got a divide by zero when trying out: {0}".format(clf))
         print("Precision or recall may be undefined due to a lack of true positive predictions.")
+
+
+def _calculate_scores(true_positives, true_negatives, false_positives, false_negatives):
+    try:
+        total_predictions = true_negatives + false_negatives + false_positives + true_positives
+        #print('total predictions: {0:0.3f}'.format(total_predictions))
+        accuracy = 1.0 * (true_positives + true_negatives) / total_predictions
+        #print('total accuracy: {0:0.3f}'.format(accuracy))
+        precision = 1.0 * true_positives / (true_positives + false_positives)
+        #print('total precision: {0:0.3f}'.format(precision))
+        recall = 1.0 * true_positives / (true_positives + false_negatives)
+        #print('total recall: {0:0.3f}'.format(recall))
+        return accuracy, recall, precision
+    except ZeroDivisionError as err:
+        print(err)
+
+def _get_mean_and_std(list):
+    mean = np.array(list).mean()
+    std = np.array(list).std()
+    return mean, std
 
 CLF_PICKLE_FILENAME = "my_classifier.pkl"
 DATASET_PICKLE_FILENAME = "my_dataset.pkl"
