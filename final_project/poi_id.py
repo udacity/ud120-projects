@@ -9,7 +9,8 @@ from sklearn.decomposition import PCA
 from sklearn.model_selection import GridSearchCV, StratifiedShuffleSplit
 from sklearn.pipeline import Pipeline
 from helper import _create_new_features, _remove_outlier, _scale_data, _get_classifier, _cross_validate, _get_train_test_data, \
-    _select_features, _get_parameters, _evaluate_grid_search, _get_features, _get_new_features, _get_new_classifier
+    _select_features, _get_parameters, _evaluate_grid_search, _get_features, _get_new_features, _get_new_classifier, \
+    _test_pipeline
 
 sys.path.append("../tools/")
 
@@ -81,12 +82,12 @@ scoring = ['accuracy', 'precision', 'recall']
 cv = StratifiedShuffleSplit(n_splits=1, test_size=0.25, random_state=42)
 grid_search = GridSearchCV(mypipeline, parameters, scoring=scoring,
                                                    cv = cv,
-                                                   refit='accuracy',
+                                                   refit='precision',
                                                    verbose=0)
 _evaluate_grid_search(grid_search, mypipeline, parameters, feature_train, label_train, scoring)
 # this is for fixed parameters
 mypipeline_with_params = mypipeline.set_params(#feat_select__k=19,
-                                               dim_reduct__n_components=9,
+                                               dim_reduct__n_components=3,
                                                clf__C=100,
                                                clf__gamma=0.5e0,
                                                clf__kernel='rbf',
@@ -101,6 +102,7 @@ mypipeline_with_params.fit(feature_train, label_train)
 #new_clf = _get_new_classifier(mypipeline)
 #_cross_validate(mypipeline_with_params, feature_train, label_train)
 test_classifier(mypipeline_with_params, data_dict, features_list, folds=10)
+#_test_pipeline(mypipeline, parameters, feature_train, label_train, data_dict, features_list, folds=10)
 
 # Provided to give you a starting point. Try a variety of classifiers.
 

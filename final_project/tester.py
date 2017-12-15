@@ -13,8 +13,8 @@
 import pickle
 import sys
 import numpy as np
+from sklearn import preprocessing
 from sklearn.model_selection import StratifiedShuffleSplit
-from helper import  _scale_data
 sys.path.append("../tools/")
 from feature_format import featureFormat, targetFeatureSplit
 
@@ -27,7 +27,7 @@ RESULTS_FORMAT_STRING = "\tTotal predictions: {:4d}\tTrue positives: {:4d}\tFals
 def test_classifier(clf, dataset, feature_list, folds = 50):
     data = featureFormat(dataset, feature_list, sort_keys = True)
     labels, features = targetFeatureSplit(data)
-    features = _scale_data(features)
+    features = preprocessing.scale(features)
     print('shape features: {0}'.format(features.shape))
     cv = StratifiedShuffleSplit(n_splits=folds, test_size=0.25, random_state=42)
     true_negatives = 0
