@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[ ]:
+# In[7]:
 
 # %load "../pca/eigenfaces.py"
 """
@@ -151,6 +151,78 @@ plot_gallery(eigenfaces, eigenface_titles, h, w)
 
 pl.show()
 
+
+# In[20]:
+
+pca.explained_variance_ratio_[:2]
+
+
+# In[21]:
+
+# The first and the second components explain 19.34% and 15.11% of the total variation in the data respectively.
+
+
+# In[22]:
+
+# Compute a PCA (eigenfaces) on the face dataset (treated as unlabeled
+# dataset): unsupervised feature extraction / dimensionality reduction
+for n_components in [10, 15, 25, 50, 100, 250]:
+    print "Extracting the top %d eigenfaces from %d faces" % (n_components, X_train.shape[0])
+    t0 = time()
+    pca = RandomizedPCA(n_components=n_components, whiten=True).fit(X_train)
+    print "done in %0.3fs" % (time() - t0)
+
+    eigenfaces = pca.components_.reshape((n_components, h, w))
+
+    print "Projecting the input data on the eigenfaces orthonormal basis"
+    t0 = time()
+    X_train_pca = pca.transform(X_train)
+    X_test_pca = pca.transform(X_test)
+    print "done in %0.3fs" % (time() - t0)
+
+
+    ###############################################################################
+    # Train a SVM classification model
+
+    print "Fitting the classifier to the training set"
+    t0 = time()
+    param_grid = {
+             'C': [1e3, 5e3, 1e4, 5e4, 1e5],
+              'gamma': [0.0001, 0.0005, 0.001, 0.005, 0.01, 0.1],
+              }
+    # for sklearn version 0.16 or prior, the class_weight parameter value is 'auto'
+    clf = GridSearchCV(SVC(kernel='rbf', class_weight='balanced'), param_grid)
+    clf = clf.fit(X_train_pca, y_train)
+    print "done in %0.3fs" % (time() - t0)
+    print "Best estimator found by grid search:"
+    print clf.best_estimator_
+
+
+    ###############################################################################
+    # Quantitative evaluation of the model quality on the test set
+
+    print "Predicting the people names on the testing set"
+    t0 = time()
+    y_pred = clf.predict(X_test_pca)
+    print "done in %0.3fs" % (time() - t0)
+
+    print classification_report(y_test, y_pred, target_names=target_names)
+    print confusion_matrix(y_test, y_pred, labels=range(n_classes))
+
+
+
+# Change n_components to the following values: [10, 15, 25, 50, 100, 250]. 
+# For each number of principal components, note the F1 score for Ariel Sharon. 
+# (For 10 PCs, the plotting functions in the code will break, but you should 
+# be able to see the F1 scores.) If you see a higher F1 score, does it mean 
+# the classifier is doing better, or worse?
+
+# **Answer:** A higher F1-score indicates a better performance.
+
+# Do you see any evidence of overfitting when using a large number of PCs? 
+# Does the dimensionality reduction of PCA seem to be helping your performance here?
+
+# **Answer:** Yes, there is an evidence. The f1-score is strongly monotone increasing but with 250 principal components the performance drops. Which shows the model started to fit noise.
 
 # In[ ]:
 
