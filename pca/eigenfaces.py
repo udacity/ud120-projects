@@ -20,7 +20,7 @@ print __doc__
 
 from time import time
 import logging
-import pylab as pl
+import matplotlib.pylab as pl
 import numpy as np
 
 from sklearn.cross_validation import train_test_split
