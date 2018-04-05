@@ -73,6 +73,19 @@ features_train, features_test, labels_train, labels_test = preprocess()
 #       6.1 Wkeit von C positiv / Normalizer
 #       6.2 Wkeit von nicht C positiv / Normalizer
 #   7. Pruefe: 6.1 und 6.2 muessen 1 ergeben
+
+# Naive bayes fuer Textanalysens
+# -----------
+# Label A und Label B sind versteckt. Label A und B benutzen woerter mit 
+# unterschiedlichen Wahrscheinlichkeit. 
+# Trotz das Sie versteckt sind bekomme ich die Ergebnisse zu sehen.  Im  beispiel der 
+# Textanalyse die Woerter die Sie ( Labels ) nutzen. 
+# 
+# Jetzt multipliziere ich alle Woerter mit den Wahrscheinlichkeiten des Labels und
+# erhalte das Produkt. Das mache ich mit jedem Label. Damit erhalte ich die Joint
+# Probability. Die nutze ich fuer den Normalizer und erhalte dann fuer Label A und B
+# jeweils die Wahrscheinlichkeit ( Joint Probability / Normalizer ) das dieses Label
+# den Text geschrieben hat
 #########################################################
 
 
