@@ -22,10 +22,18 @@ from email_preprocess import preprocess
 features_train, features_test, labels_train, labels_test = preprocess()
 
 
+#########################################################
+### your code goes here ###
+
+print( "features_train: ", features_train )
+print( "labels_train: ", labels_train )
+
+# Ich muss das irgenwie ausmultiplizieren. ggfs features * labels?
+
+
 
 
 #########################################################
-### your code goes here ###
 
 # Example P[robability](C[ancer]) = 0.01 # Occurs in 1% of the population
 # Test: 90% it is positive if you have C[ancer] # Sensitivity
