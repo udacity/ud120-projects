@@ -43,6 +43,25 @@ data_dict = pickle.load( open("../final_project/final_project_dataset.pkl", "r")
 ### there's an outlier--remove it! 
 data_dict.pop("TOTAL", 0)
 
+# from sklearn.preprocessing import MinMaxScaler
+
+salary_cleaned = [record[1]['salary'] for record in data_dict.items() if not record[1]['salary'] == 'NaN']
+exercised_stock_options_cleaned = [record[1]['exercised_stock_options'] for record in data_dict.items() if not record[1]['exercised_stock_options'] == 'NaN']
+
+# scaler = MinMaxScaler()
+# scaler.fit(salary_cleaned)
+print (200000. - min(salary_cleaned)) / (max(salary_cleaned) - min(salary_cleaned))
+
+# scaler = MinMaxScaler()
+# scaler.fit(exercised_stock_options_cleaned)
+print (1000000. - min(exercised_stock_options_cleaned)) / (max(exercised_stock_options_cleaned) - min(exercised_stock_options_cleaned))
+
+
+# print min(data_cleaned)
+# print max(data_cleaned)
+
+# print min(data_dict.items(), key=lambda record: float(record[1]['exercised_stock_options']))[1]['exercised_stock_options']
+# print max(data_dict.items(), key=lambda record: float(record[1]['exercised_stock_options']))[1]['exercised_stock_options']
 
 ### the input features we want to use 
 ### can be any key in the person-level dictionary (salary, director_fees, etc.) 
@@ -50,7 +69,7 @@ feature_1 = "salary"
 feature_2 = "exercised_stock_options"
 feature_3 = "total_payments"
 poi  = "poi"
-features_list = [poi, feature_1, feature_2, feature_3]
+features_list = [poi, feature_1, feature_2]
 data = featureFormat(data_dict, features_list )
 poi, finance_features = targetFeatureSplit( data )
 
@@ -59,7 +78,7 @@ poi, finance_features = targetFeatureSplit( data )
 ### you'll want to change this line to 
 ### for f1, f2, _ in finance_features:
 ### (as it's currently written, the line below assumes 2 features)
-for f1, f2, _ in finance_features:
+for f1, f2 in finance_features:
     plt.scatter( f1, f2 )
 plt.show()
 
