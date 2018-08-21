@@ -38,6 +38,7 @@ clf = tree.DecisionTreeClassifier()
 clf = clf.fit(features_train, labels_train)
 
 print clf.score (features_test, labels_test)
-print labels_test
-print len([label for label in labels_test if label == 1])
+# print features_test
+# print clf.predict(features_test[0][0])
+print len([i for i in range(len(labels_test)) if labels_test[i] == clf.predict(features_test[i][0]) and labels_test[i] == 1])
 
