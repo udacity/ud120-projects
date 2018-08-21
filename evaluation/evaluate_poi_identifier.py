@@ -42,3 +42,8 @@ print clf.score (features_test, labels_test)
 # print clf.predict(features_test[0][0])
 print len([i for i in range(len(labels_test)) if labels_test[i] == clf.predict(features_test[i][0]) and labels_test[i] == 1])
 
+from sklearn.metrics import precision_score, recall_score
+
+print precision_score(labels_test, clf.predict(features_test))
+print recall_score(labels_test, clf.predict(features_test))
+
