@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 import sys
 import pickle
 sys.path.append("../tools/")
