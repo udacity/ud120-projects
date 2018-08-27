@@ -21,10 +21,19 @@ features_train, features_test, labels_train, labels_test = preprocess()
 
 
 
-
+t0 = time()
 #########################################################
 ### your code goes here ###
+from sklearn import svm
+clf = svm.SVC(kernel='linear')
+clf.fit(features_train , labels_train)
+print("the time taken to train is" , round(time()-t0 , 3) , "s")
 
+predictions = clf.predict(features_test)
+
+from sklearn.metrics import accuracy_score
+acc = accuracy_score(predictions , labels_test)
+print(acc)
 #########################################################
 
 
