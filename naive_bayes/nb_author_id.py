@@ -22,6 +22,7 @@ from email_preprocess import preprocess
 features_train, features_test, labels_train, labels_test = preprocess()
 
 
+t0 = time()
 
 
 #########################################################
@@ -32,7 +33,7 @@ fitclf = clf.fit(features_train , labels_train)
 result = clf.predict(features_test)
 
 
-
+print "training time is meagerly" , round(time() - t0 , 3) , "seconds"
 from sklearn.metrics import accuracy_score
 acc = accuracy_score(result , labels_test)
 
