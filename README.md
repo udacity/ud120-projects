@@ -19,3 +19,12 @@ Starter project code for students taking Udacity ud120
 3) Install required packages
 
     `pip install -r requirements.txt`
+
+### running startup script
+
+This will download the Enron dataset (may take a while).
+
+```
+cd tools
+python startup.py
+```
