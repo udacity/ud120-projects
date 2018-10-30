@@ -1,5 +1,6 @@
 matplotlib==1.4.3
 nltk==3.3
 numpy==1.15.2
+Pillow==5.3.0
 scikit-learn==0.19.0
 scipy==1.1.0
