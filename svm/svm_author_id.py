@@ -7,7 +7,7 @@
     Sara has label 0
     Chris has label 1
 """
-    
+from sklearn import svm   
 import sys
 from time import time
 sys.path.append("../tools/")
@@ -18,9 +18,10 @@ from email_preprocess import preprocess
 ### and testing datasets, respectively
 ### labels_train and labels_test are the corresponding item labels
 features_train, features_test, labels_train, labels_test = preprocess()
-
-
-
+clf=svm.SVC()
+clf.fit(features_train, features_test)
+pred=clf.predict(labels_train)
+acc=clf.score(pred,labels_test)
 
 #########################################################
 ### your code goes here ###
