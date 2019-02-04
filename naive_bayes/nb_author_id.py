@@ -23,8 +23,13 @@ features_train, features_test, labels_train, labels_test = preprocess()
 
 clf=GaussianNB()
 clf.fit(features_train,labels_train)
+t0=time()
+print('trainingtime',round(time()-t0,3),'s')
 
 acc=clf.score(features_test, labels_test)
+t0=time()
+print('trainingtime',round(time()-t0,3),'s')
+
 print(acc)
 
 
