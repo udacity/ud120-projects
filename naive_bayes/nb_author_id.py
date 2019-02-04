@@ -9,7 +9,7 @@
     Sara has label 0
     Chris has label 1
 """
-from sklearn.naive_bayes import GsussianNB   
+from sklearn.naive_bayes import GaussianNB  
 import sys
 from time import time
 sys.path.append("../tools/")
