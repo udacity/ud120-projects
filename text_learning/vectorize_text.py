@@ -43,7 +43,7 @@ for name, from_person in [("sara", from_sara), ("chris", from_chris)]:
         ### once everything is working, remove this line to run over full dataset
         temp_counter += 1
         if temp_counter < 200:
-            path = os.path.join('..', path[:-1])
+            path = os.path.join('..', path[:-1]).rstrip()
             print path
             email = open(path, "r")
 
