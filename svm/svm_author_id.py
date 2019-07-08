@@ -19,7 +19,9 @@ from email_preprocess import preprocess
 ### labels_train and labels_test are the corresponding item labels
 features_train, features_test, labels_train, labels_test = preprocess()
 
-
+# Note - clf.predict() returns a list of continuous variables (between 0 and 1) while the labels_test array is binary (0 and 1).
+# You need to use np.around(pred) to convert the predictions to closest int to be able to use 
+# scikit-learn's classification accuracy_score method.
 
 
 #########################################################
