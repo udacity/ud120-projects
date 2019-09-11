@@ -1,7 +1,6 @@
 #!/usr/bin/python
 
 import pickle
-import cPickle
 import numpy
 
 from sklearn import cross_validation
@@ -59,7 +58,7 @@ def preprocess(words_file = "../tools/word_data.pkl", authors_file="../tools/ema
     features_test_transformed  = selector.transform(features_test_transformed).toarray()
 
     ### info on the data
-    print "no. of Chris training emails:", sum(labels_train)
-    print "no. of Sara training emails:", len(labels_train)-sum(labels_train)
+    print("no. of Chris training emails:", sum(labels_train))
+    print("no. of Sara training emails:", len(labels_train)-sum(labels_train))
     
     return features_train_transformed, features_test_transformed, labels_train, labels_test
