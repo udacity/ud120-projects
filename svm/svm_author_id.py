@@ -13,7 +13,6 @@ from time import time
 sys.path.append("../tools/")
 from email_preprocess import preprocess
 from sklearn import svm
-import pandas as pd
 
 def print_elapsed(start, end):
     print('elapsed: {}'.format(end - start))
