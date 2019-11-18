@@ -24,7 +24,20 @@ features_train, features_test, labels_train, labels_test = preprocess()
 
 #########################################################
 ### your code goes here ###
+from sklearn import svm
+clf = svm.SVC(kernel="rbf")
+clf.fit(features_train, labels_train)
+#Hyper-marameters are 'C', 'gamma', and the 'kernel'  
+SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
+    decision_function_shape='ovr', degree=3, gamma='scale', kernel='rbf',
+    max_iter=-1, probability=False, random_state=None, shrinking=True,
+    tol=0.001, verbose=False)
+pred=clf.predict(features_test) # predict with test_features
 
+#print accuracy using the classifier
+from sklearn.metrics import accuracy_score
+print(accuracy_score(pred, labels_test) # i.e. predicted-label VS true-label
+  
 #########################################################
 
 
