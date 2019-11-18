@@ -36,7 +36,7 @@ pred=clf.predict(features_test) # predict with test_features
 
 #print accuracy using the classifier
 from sklearn.metrics import accuracy_score
-print(accuracy_score(pred, labels_test) # i.e. predicted-label VS true-label
+print(accuracy_score(pred, labels_test)) # i.e. predicted-label VS true-label
   
 #########################################################
 
