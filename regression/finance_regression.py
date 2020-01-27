@@ -26,7 +26,7 @@ data = featureFormat( dictionary, features_list, remove_any_zeroes=True)
 target, features = targetFeatureSplit( data )
 
 ### training-testing split needed in regression, just like classification
-from sklearn.cross_validation import train_test_split
+from sklearn.model_selection import train_test_split
 feature_train, feature_test, target_train, target_test = train_test_split(features, target, test_size=0.5, random_state=42)
 train_color = "b"
 test_color = "b"
