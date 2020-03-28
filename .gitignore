@@ -9,3 +9,4 @@ my_classifier.pkl
 my_dataset.pkl
 my_feature_list.pkl
 .ipynb_checkpoints/enron_data_ml-checkpoint.ipynb
+enron_mail_20150507.tar.gz
