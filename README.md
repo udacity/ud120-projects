@@ -1,6 +1,7 @@
 # [WIP] ud120 Projects 2.0
 
-> The aim of this repo is to improve original starter project code for students taking Udacity ud120 with
+> The aim of this repo is to improve original starter project code for students taking
+> [Intro to Machine Learning](https://classroom.udacity.com/courses/ud120) on Udacity with
 > python 3.8, conda managing and jupyter notebooks
 
 ## Cloning the repo
@@ -35,3 +36,4 @@ $ python ./utils/starter.py
 ## Lessons
 
 - [Lesson 2: Naive Bayes Mini-Project](./lesson-2-naive-bayes/nb_author_id.ipynb)
+- [Lesson 3: SVM Mini-Project](./lesson-3-svm/svm_author_id.ipynb)
