@@ -3,6 +3,13 @@
 > The aim of this repo is to improve original starter project code for students taking Udacity ud120 with
 > python 3.8, conda managing and jupyter notebooks
 
+## Cloning the repo
+
+```bash
+$ git clone https://github.com/trsvchn/ud120-projects-v2.git
+$ cd ud120-projects-v2
+```
+
 ## Setting up conda environment
 
 Download and install anaconda from [here](https://www.anaconda.com/distribution/)
