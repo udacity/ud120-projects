@@ -38,3 +38,4 @@ $ python ./utils/starter.py
 - [Lesson 2: Naive Bayes Mini-Project](./lesson-2-naive-bayes/nb_author_id.ipynb)
 - [Lesson 3: SVM Mini-Project](./lesson-3-svm/svm_author_id.ipynb)
 - [Lesson 4: Decision Tree Mini-Project](./lesson-4-decision-tree/dt_author_id.ipynb)
+- [Lesson 5: Choose Your own Algorithm Mini Project](./lesson-5-choose-your-own/your_algorithm.ipynb)
