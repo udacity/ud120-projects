@@ -31,3 +31,7 @@ $ conda activate ud120
 ```bash
 $ python ./utils/starter.py
 ```
+
+## Lessons
+
+- [Lesson 2: Naive Bayes Mini-Project](./lesson-2-naive-bayes/nb_author_id.ipynb)
