@@ -4,6 +4,14 @@
 > [Intro to Machine Learning](https://classroom.udacity.com/courses/ud120) on Udacity with
 > python 3.8, conda managing and jupyter notebooks
 
+## Mini-Projects
+
+- [Lesson 2: Naive Bayes Mini-Project](./lesson-2-naive-bayes/nb_author_id.ipynb)
+- [Lesson 3: SVM Mini-Project](./lesson-3-svm/svm_author_id.ipynb)
+- [Lesson 4: Decision Tree Mini-Project](./lesson-4-decision-tree/dt_author_id.ipynb)
+- [Lesson 5: Choose Your own Algorithm Mini Project](./lesson-5-choose-your-own/your_algorithm.ipynb)
+- [Lesson 6: Datasets and Questions Mini-Project](./lesson-6-datasets-questions/explore_enron_data.ipynb)
+
 ## Cloning the repo
 
 ```bash
@@ -32,11 +40,3 @@ $ conda activate ud120
 ```bash
 $ python ./utils/starter.py
 ```
-
-## Mini-Projects
-
-- [Lesson 2: Naive Bayes Mini-Project](./lesson-2-naive-bayes/nb_author_id.ipynb)
-- [Lesson 3: SVM Mini-Project](./lesson-3-svm/svm_author_id.ipynb)
-- [Lesson 4: Decision Tree Mini-Project](./lesson-4-decision-tree/dt_author_id.ipynb)
-- [Lesson 5: Choose Your own Algorithm Mini Project](./lesson-5-choose-your-own/your_algorithm.ipynb)
-- [Lesson 6: Datasets and Questions Mini-Project](./lesson-6-datasets-questions/explore_enron_data.ipynb)
