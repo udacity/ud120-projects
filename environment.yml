@@ -1,0 +1,12 @@
+name: ud120
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.8
+  - numpy
+  - scipy
+  - scikit-learn
+  - nltk
+  - jupyter
+  - matplotlib
