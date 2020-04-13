@@ -6,13 +6,14 @@
 ## Setting up conda environment
 
 Download and install anaconda from [here](https://www.anaconda.com/distribution/)
+
 Create environment
 
 ```bash
 $ conda env create -f environment.yml
 ```
 
-Activate 'ud120' environment via
+Activate `ud120` environment via
 
 ```bash
 $ conda activate ud120
