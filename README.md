@@ -40,32 +40,32 @@ for detailed explanation:
 
 ## Initial Setup
 
-### Clone the repo
+### 1. Clone the repo
 
 ```bash
 $ git clone https://github.com/trsvchn/ud120-projects-v2.git
 $ cd ud120-projects-v2
 ```
 
-### Set up conda environment
+### 2. Set up conda environment
 
-#### Download and install anaconda
+#### 2.1. Download and install anaconda
 
 [link](https://www.anaconda.com/distribution/)
 
-#### Create environment
+#### 2.2. Create environment
 
 ```bash
 $ conda env create -f environment.yml
 ```
 
-#### Activate environment via
+#### 2.3. Activate environment via
 
 ```bash
 $ conda activate ud120
 ```
 
-### Run starter script to check env and download required data
+### 3. Run starter script to check env and download required data
 
 ```bash
 $ python ./utils/starter.py
