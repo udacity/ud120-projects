@@ -7,12 +7,13 @@ python 3.8, conda managing and jupyter notebooks
 
 ## Mini-Projects
 
-- [Lesson 2: Naive Bayes Mini-Project](./lesson-2-naive-bayes/nb_author_id.ipynb)
-- [Lesson 3: SVM Mini-Project](./lesson-3-svm/svm_author_id.ipynb)
-- [Lesson 4: Decision Trees Mini-Project](./lesson-4-decision-tree/dt_author_id.ipynb)
-- [Lesson 5: Choose Your own Algorithm Mini Project](./lesson-5-choose-your-own/your_algorithm.ipynb)
-- [Lesson 6: Datasets and Questions Mini-Project](./lesson-6-datasets-questions/explore_enron_data.ipynb)
-- [Lesson 7: Regressions Mini-Project](./lesson-7-regression/finance_regression.ipynb)
+- [Lesson 2: Naive Bayes](./lesson-2-naive-bayes/nb_author_id.ipynb)
+- [Lesson 3: SVM](./lesson-3-svm/svm_author_id.ipynb)
+- [Lesson 4: Decision Trees](./lesson-4-decision-tree/dt_author_id.ipynb)
+- [Lesson 5: Choose Your own Algorithm](./lesson-5-choose-your-own/your_algorithm.ipynb)
+- [Lesson 6: Datasets and Questions](./lesson-6-datasets-questions/explore_enron_data.ipynb)
+- [Lesson 7: Regressions](./lesson-7-regression/finance_regression.ipynb)
+- [Lesson 8: Outliers](./lesson-8-outliers/outlier_removal_regression.ipynb)
 
 
 ## Important Notes
@@ -32,10 +33,17 @@ clf = SVC(kernel='linear', gamma='auto')
 ### Lesson 7: Regressions
 
 To get the correct (acceptable by grader) results set `sort_keys='../utils/python2_lesson06_keys.pkl'` for
-`feature_format` function. See [this](https://classroom.udacity.com/courses/ud120/lessons/2301748537/concepts/30416086000923)
-for detailed explanation:
+`feature_format` function:
+
+```python
+...
+data = feature_format(dictionary, features_list, remove_any_zeroes=True, sort_keys='../utils/python2_lesson06_keys.pkl')
+...
+```
 
 > [...] This will open up a file in the tools folder with the Python 2 key order.
+
+ See [this](https://classroom.udacity.com/courses/ud120/lessons/2301748537/concepts/30416086000923) for detailed explanation
 
 
 ## Initial Setup

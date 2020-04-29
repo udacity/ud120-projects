@@ -100,8 +100,7 @@ def feature_format(dictionary, features, remove_NaN=True, remove_all_zeroes=True
 
 
 def target_feature_split(data):
-    """
-    Given a numpy array like the one returned from
+    """Given a numpy array like the one returned from
     featureFormat, separate out the first feature
     and put it into its own list (this should be the
     quantity you want to predict)
