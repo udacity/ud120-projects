@@ -2,7 +2,7 @@
 
 The aim of this repo is to improve original starter project code for students taking
 [Intro to Machine Learning](https://classroom.udacity.com/courses/ud120) on Udacity with
-python 3.8, conda managing and jupyter notebooks
+python 3.8, conda managing and jupyter notebooks.
 
 
 ## Mini-Projects
@@ -14,6 +14,8 @@ python 3.8, conda managing and jupyter notebooks
 - [Lesson 6: Datasets and Questions](./lesson-6-datasets-questions/explore_enron_data.ipynb)
 - [Lesson 7: Regressions](./lesson-7-regression/finance_regression.ipynb)
 - [Lesson 8: Outliers](./lesson-8-outliers/outlier_removal_regression.ipynb)
+- [Lesson 9: Clustering](lesson-9-10-k-means/k_means_cluster.ipynb)
+- [Lesson 10: Feature Scaling](lesson-9-10-k-means/k_means_cluster.ipynb)
 
 
 ## Important Notes
@@ -43,7 +45,7 @@ data = feature_format(dictionary, features_list, remove_any_zeroes=True, sort_ke
 
 > [...] This will open up a file in the tools folder with the Python 2 key order.
 
- See [this](https://classroom.udacity.com/courses/ud120/lessons/2301748537/concepts/30416086000923) for detailed explanation
+ See [this](https://classroom.udacity.com/courses/ud120/lessons/2301748537/concepts/30416086000923) for detailed explanation.
 
 
 ## Initial Setup
