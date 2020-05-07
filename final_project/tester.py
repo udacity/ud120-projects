@@ -13,6 +13,7 @@
 import pickle
 import sys
 from sklearn.model_selection import StratifiedShuffleSplit
+
 sys.path.append("../tools/")
 from feature_format import featureFormat, targetFeatureSplit
 
@@ -22,25 +23,26 @@ Recall: {:>0.{display_precision}f}\tF1: {:>0.{display_precision}f}\tF2: {:>0.{di
 RESULTS_FORMAT_STRING = "\tTotal predictions: {:4d}\tTrue positives: {:4d}\tFalse positives: {:4d}\
 \tFalse negatives: {:4d}\tTrue negatives: {:4d}"
 
-def test_classifier(clf, dataset, feature_list, folds = 1000):
-    data = featureFormat(dataset, feature_list, sort_keys = True)
+
+def test_classifier(clf, dataset, feature_list, folds=1000):
+    data = featureFormat(dataset, feature_list, sort_keys=True)
     labels, features = targetFeatureSplit(data)
-    cv = StratifiedShuffleSplit(labels, folds, random_state = 42)
+    cv = StratifiedShuffleSplit(labels, folds, random_state=42)
     true_negatives = 0
     false_negatives = 0
     true_positives = 0
     false_positives = 0
     for train_idx, test_idx in cv:
         features_train = []
-        features_test  = []
-        labels_train   = []
-        labels_test    = []
+        features_test = []
+        labels_train = []
+        labels_test = []
         for ii in train_idx:
-            features_train.append( features[ii] )
-            labels_train.append( labels[ii] )
+            features_train.append(features[ii])
+            labels_train.append(labels[ii])
         for jj in test_idx:
-            features_test.append( features[jj] )
-            labels_test.append( labels[jj] )
+            features_test.append(features[jj])
+            labels_test.append(labels[jj])
 
         ### fit the classifier using training set, and test on test set
         clf.fit(features_train, labels_train)
@@ -61,22 +63,28 @@ def test_classifier(clf, dataset, feature_list, folds = 1000):
                 break
     try:
         total_predictions = true_negatives + false_negatives + false_positives + true_positives
-        accuracy = 1.0*(true_positives + true_negatives)/total_predictions
-        precision = 1.0*true_positives/(true_positives+false_positives)
-        recall = 1.0*true_positives/(true_positives+false_negatives)
-        f1 = 2.0 * true_positives/(2*true_positives + false_positives+false_negatives)
-        f2 = (1+2.0*2.0) * precision*recall/(4*precision + recall)
+        accuracy = 1.0 * (true_positives + true_negatives) / total_predictions
+        precision = 1.0 * true_positives / (true_positives + false_positives)
+        recall = 1.0 * true_positives / (true_positives + false_negatives)
+        f1 = 2.0 * true_positives / (2 * true_positives + false_positives + false_negatives)
+        f2 = (1 + 2.0 * 2.0) * precision * recall / (4 * precision + recall)
         print(clf)
-        print(PERF_FORMAT_STRING.format(accuracy, precision, recall, f1, f2, display_precision = 5))
-        print(RESULTS_FORMAT_STRING.format(total_predictions, true_positives, false_positives, false_negatives, true_negatives))
+        print(PERF_FORMAT_STRING.format(accuracy, precision, recall, f1, f2, display_precision=5))
+        print(
+            RESULTS_FORMAT_STRING.format(
+                total_predictions, true_positives, false_positives, false_negatives, true_negatives
+            )
+        )
         print("")
     except:
         print("Got a divide by zero when trying out:", clf)
         print("Precision or recall may be undefined due to a lack of true positive predicitons.")
 
+
 CLF_PICKLE_FILENAME = "my_classifier.pkl"
 DATASET_PICKLE_FILENAME = "my_dataset.pkl"
 FEATURE_LIST_FILENAME = "my_feature_list.pkl"
+
 
 def dump_classifier_and_data(clf, dataset, feature_list):
     with open(CLF_PICKLE_FILENAME, "w") as clf_outfile:
@@ -85,6 +93,7 @@ def dump_classifier_and_data(clf, dataset, feature_list):
         pickle.dump(dataset, dataset_outfile)
     with open(FEATURE_LIST_FILENAME, "w") as featurelist_outfile:
         pickle.dump(feature_list, featurelist_outfile)
+
 
 def load_classifier_and_data():
     with open(CLF_PICKLE_FILENAME, "r") as clf_infile:
@@ -95,11 +104,13 @@ def load_classifier_and_data():
         feature_list = pickle.load(featurelist_infile)
     return clf, dataset, feature_list
 
+
 def main():
     ### load up student's classifier, dataset, and feature_list
     clf, dataset, feature_list = load_classifier_and_data()
     ### Run testing script
     test_classifier(clf, dataset, feature_list)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

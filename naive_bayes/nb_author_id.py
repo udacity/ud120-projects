@@ -12,6 +12,7 @@
 
 import sys
 from time import time
+
 sys.path.append("../tools/")
 from email_preprocess import preprocess
 
@@ -20,8 +21,6 @@ from email_preprocess import preprocess
 ### and testing datasets, respectively
 ### labels_train and labels_test are the corresponding item labels
 features_train, features_test, labels_train, labels_test = preprocess()
-
-
 
 
 #########################################################
@@ -42,6 +41,5 @@ print(f"training time: {round(time() - t0, 3)}")
 acc = accuracy_score(labels_test, y_pred)
 print(("{:.3f}".format(acc)))
 
+
 #########################################################
-
-

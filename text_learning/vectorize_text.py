@@ -5,7 +5,7 @@ import pickle
 import re
 import sys
 
-sys.path.append( "../tools/" )
+sys.path.append("../tools/")
 from parse_out_email_text import parseOutText
 
 """
@@ -23,7 +23,7 @@ from parse_out_email_text import parseOutText
 """
 
 
-from_sara  = open("from_sara.txt", "r")
+from_sara = open("from_sara.txt", "r")
 from_chris = open("from_chris.txt", "r")
 
 from_data = []
@@ -43,7 +43,7 @@ for name, from_person in [("sara", from_sara), ("chris", from_chris)]:
         ### once everything is working, remove this line to run over full dataset
         temp_counter += 1
         if temp_counter < 200:
-            path = os.path.join('..', path[:-1])
+            path = os.path.join("..", path[:-1])
             print(path)
             email = open(path, "r")
 
@@ -56,20 +56,14 @@ for name, from_person in [("sara", from_sara), ("chris", from_chris)]:
 
             ### append a 0 to from_data if email is from Sara, and 1 if email is from Chris
 
-
             email.close()
 
 print("emails processed")
 from_sara.close()
 from_chris.close()
 
-pickle.dump( word_data, open("your_word_data.pkl", "w") )
-pickle.dump( from_data, open("your_email_authors.pkl", "w") )
-
-
-
+pickle.dump(word_data, open("your_word_data.pkl", "w"))
+pickle.dump(from_data, open("your_email_authors.pkl", "w"))
 
 
 ### in Part 4, do TfIdf vectorization here
-
-

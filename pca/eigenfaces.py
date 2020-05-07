@@ -15,7 +15,6 @@ The dataset used in this example is a preprocessed excerpt of the
 """
 
 
-
 print(__doc__)
 
 from time import time
@@ -32,7 +31,7 @@ from sklearn.decomposition import RandomizedPCA
 from sklearn.svm import SVC
 
 # Display progress logs on stdout
-logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s')
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
 
 
 ###############################################################################
@@ -88,11 +87,11 @@ print("done in %0.3fs" % (time() - t0))
 print("Fitting the classifier to the training set")
 t0 = time()
 param_grid = {
-         'C': [1e3, 5e3, 1e4, 5e4, 1e5],
-          'gamma': [0.0001, 0.0005, 0.001, 0.005, 0.01, 0.1],
-          }
+    "C": [1e3, 5e3, 1e4, 5e4, 1e5],
+    "gamma": [0.0001, 0.0005, 0.001, 0.005, 0.01, 0.1],
+}
 # for sklearn version 0.16 or prior, the class_weight parameter value is 'auto'
-clf = GridSearchCV(SVC(kernel='rbf', class_weight='balanced'), param_grid)
+clf = GridSearchCV(SVC(kernel="rbf", class_weight="balanced"), param_grid)
 clf = clf.fit(X_train_pca, y_train)
 print("done in %0.3fs" % (time() - t0))
 print("Best estimator found by grid search:")
@@ -114,10 +113,11 @@ print(confusion_matrix(y_test, y_pred, labels=list(range(n_classes))))
 ###############################################################################
 # Qualitative evaluation of the predictions using matplotlib
 
+
 def plot_gallery(images, titles, h, w, n_row=3, n_col=4):
     """Helper function to plot a gallery of portraits"""
     pl.figure(figsize=(1.8 * n_col, 2.4 * n_row))
-    pl.subplots_adjust(bottom=0, left=.01, right=.99, top=.90, hspace=.35)
+    pl.subplots_adjust(bottom=0, left=0.01, right=0.99, top=0.90, hspace=0.35)
     for i in range(n_row * n_col):
         pl.subplot(n_row, n_col, i + 1)
         pl.imshow(images[i].reshape((h, w)), cmap=pl.cm.gray)
@@ -128,13 +128,14 @@ def plot_gallery(images, titles, h, w, n_row=3, n_col=4):
 
 # plot the result of the prediction on a portion of the test set
 
-def title(y_pred, y_test, target_names, i):
-    pred_name = target_names[y_pred[i]].rsplit(' ', 1)[-1]
-    true_name = target_names[y_test[i]].rsplit(' ', 1)[-1]
-    return 'predicted: %s\ntrue:      %s' % (pred_name, true_name)
 
-prediction_titles = [title(y_pred, y_test, target_names, i)
-                         for i in range(y_pred.shape[0])]
+def title(y_pred, y_test, target_names, i):
+    pred_name = target_names[y_pred[i]].rsplit(" ", 1)[-1]
+    true_name = target_names[y_test[i]].rsplit(" ", 1)[-1]
+    return "predicted: %s\ntrue:      %s" % (pred_name, true_name)
+
+
+prediction_titles = [title(y_pred, y_test, target_names, i) for i in range(y_pred.shape[0])]
 
 plot_gallery(X_test, prediction_titles, h, w)
 
