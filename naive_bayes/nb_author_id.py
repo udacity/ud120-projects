@@ -26,7 +26,12 @@ features_train, features_test, labels_train, labels_test = preprocess()
 
 #########################################################
 ### your code goes here ###
+from sklearn.naive_bayes import GaussianNB
 
+gnb = GaussianNB()
+clf = gnb.fit(features_train, labels_train)
+pred = clf.predict(features_test)
+print("Gaussian Naive Bayes Accuracy: ".format(clf.score(features_test, labels_test)))
 
 #########################################################
 
