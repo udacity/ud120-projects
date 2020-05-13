@@ -43,7 +43,7 @@ from sklearn.linear_model import LinearRegression
 reg = LinearRegression()
 reg.fit(feature_train, target_train)
 print("Linear Regression Slope: {}".format(reg.coef_))
-print("Linear Regression Intercept: {:.2f}".format(reg.intercept_))
+print("Linear Regression Intercept: {}".format(reg.intercept_))
 
 
 ### draw the scatterplot, with color-coded training and testing points
