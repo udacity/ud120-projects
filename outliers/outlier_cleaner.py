@@ -13,8 +13,14 @@ def outlierCleaner(predictions, ages, net_worths):
     
     cleaned_data = []
 
-    ### your code goes here
+    THRESHOLD_ERROR = 80
 
+    ### your code goes here
+    for idx, prediction in enumerate(predictions):
+        err = prediction - net_worths[idx]
+        if abs(err) < THRESHOLD_ERROR:
+            cleaned_data.append((ages[idx], net_worths[idx], err))
+    print("Cleaned data length: ", len(cleaned_data))
     
     return cleaned_data
 
