@@ -31,7 +31,7 @@ from sklearn.naive_bayes import GaussianNB
 gnb = GaussianNB()
 clf = gnb.fit(features_train, labels_train)
 pred = clf.predict(features_test)
-print(clf.score(features_test, labels_test))
+print("Gaussian Naive Bayes Accuracy: ".format(clf.score(features_test, labels_test)))
 
 #########################################################
 
