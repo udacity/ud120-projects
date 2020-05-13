@@ -79,3 +79,6 @@ if len(cleaned_data) > 0:
 else:
     print("outlierCleaner() is returning an empty list, no refitting to be done")
 
+print("After outliers data cleanup")
+print("Linear Regression Slope: {}".format(reg.coef_))
+print("Linear Regression Intercept: {}".format(reg.intercept_))
