@@ -59,7 +59,18 @@ poi, finance_features = targetFeatureSplit( data )
 ### you'll want to change this line to 
 ### for f1, f2, _ in finance_features:
 ### (as it's currently written, the line below assumes 2 features)
-for f1, f2, _ in finance_features:
+salary = numpy.array([[x[0]] for x in finance_features])
+exercised_stock_options = numpy.array([[x[1]] for x in finance_features])
+
+from sklearn.preprocessing import MinMaxScaler
+
+min_max_scaler = MinMaxScaler()
+salary = min_max_scaler.fit_transform(salary)
+exercised_stock_options = min_max_scaler.fit_transform(exercised_stock_options)
+
+for idx in range(len(finance_features)):
+    f1 = finance_features[idx][0] = salary[idx][0]
+    f2 = finance_features[idx][1] = exercised_stock_options[idx][0]
     plt.scatter( f1, f2 )
 plt.show()
 
