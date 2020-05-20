@@ -25,7 +25,7 @@ features_train, features_test, labels_train, labels_test = preprocess()
 #########################################################
 ### your code goes here ###
 ### fit and predict ###
-def svm_clf(features_train, features_test, labels_train, labels_test, min_samples_split=40):
+def dt_clf(features_train, features_test, labels_train, labels_test, min_samples_split=40):
 
     # Import scikit-learn metrics module for SVC
     from sklearn import tree
@@ -55,7 +55,7 @@ def svm_clf(features_train, features_test, labels_train, labels_test, min_sample
 
 if __name__ == "__main__":
     labels_test_pred, accuracy, training_time, prediction_time \
-        = svm_clf(features_train, features_test, labels_train, labels_test, min_samples_split=40)
+        = dt_clf(features_train, features_test, labels_train, labels_test, min_samples_split=40)
     print "Accuracy:", accuracy
     print "Training time:", training_time, "s"
     print "Prediction time:", prediction_time, "s"
