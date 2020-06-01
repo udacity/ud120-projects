@@ -24,8 +24,13 @@ features_train, features_test, labels_train, labels_test = preprocess()
 
 #########################################################
 ### your code goes here ###
-
-
+from sklearn import tree
+print("length" + str(len(features_train[0])))
+clf = tree.DecisionTreeClassifier(min_samples_split=40)
+print("training")
+clf.fit(features_train,labels_train)
+print("Scoring")
+print(clf.score(features_test, labels_test))
 #########################################################
 
 
