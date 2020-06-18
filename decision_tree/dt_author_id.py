@@ -10,7 +10,8 @@
     
 import sys
 from time import time
-sys.path.append("../tools/")
+base_path = "C:/Users/Trent.Park/Projects/udacity/ud120-projects"
+sys.path.append(base_path + "/tools/")
 from email_preprocess import preprocess
 
 
