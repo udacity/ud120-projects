@@ -1,6 +1,9 @@
 #!/usr/bin/python
 
 import matplotlib.pyplot as plt
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+
 from prep_terrain_data import makeTerrainData
 from class_vis import prettyPicture
 
