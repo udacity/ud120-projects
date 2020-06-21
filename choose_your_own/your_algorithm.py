@@ -34,14 +34,28 @@ plt.show()
 ### your code here!  name your classifier object clf if you want the 
 ### visualization code (prettyPicture) to show you the decision boundary
 
+# Initialize random forest classifier
+clf = RandomForestClassifier(
+    n_estimators=100,
+    criterion='entropy',
+    max_depth=50,
+    min_samples_split=25,
+    max_features=None,
+    random_state=0,
+    bootstrap=True
+)
 
+# Fit classifier to given test data
+clf.fit(features_train, labels_train)
 
+# Predict output using trained model
+labels_pred = clf.predict(features_test)
 
+# Calculate accuracy
+acc = accuracy_score(labels_test, labels_pred)
 
-
-
-
+# Print the classification graphic
 try:
-    prettyPicture(clf, features_test, labels_test)
+    prettyPicture(clf, features_test, labels_test, accuracy=acc)
 except NameError:
-    pass
+    print "Could not find a classifier."
