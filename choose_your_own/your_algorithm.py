@@ -55,6 +55,6 @@ acc = accuracy_score(labels_test, labels_pred)
 
 # Print the classification graphic
 try:
-    prettyPicture(clf, features_test, labels_test, accuracy=acc)
+    prettyPicture(clf, features_test, labels_test, accuracy=acc, image_name='my_classifier')
 except NameError:
     print "Could not find a classifier."
