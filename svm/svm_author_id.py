@@ -24,7 +24,11 @@ features_train, features_test, labels_train, labels_test = preprocess()
 
 #########################################################
 ### your code goes here ###
-
+from sklearn.svm import SVC
+clf=SVC(kernel="linear")
+clf.fit(features_train,labels_train)
+SVC()
+pred=svc.pred(feautures_test)
 #########################################################
 
 
