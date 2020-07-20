@@ -8,3 +8,10 @@ text_learning/your_email_authors.pkl
 my_classifier.pkl
 my_dataset.pkl
 my_feature_list.pkl
+tools/enron_mail_20150507.tar.gz
+
+# virtual envs
+.venv
+
+# IDE
+.idea

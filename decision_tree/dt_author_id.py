@@ -10,22 +10,24 @@
     
 import sys
 from time import time
-sys.path.append("../tools/")
-from email_preprocess import preprocess
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score
+from tools.email_preprocess import preprocess
 
 
-### features_train and features_test are the features for the training
-### and testing datasets, respectively
-### labels_train and labels_test are the corresponding item labels
-features_train, features_test, labels_train, labels_test = preprocess()
+def predict_author_id():
+    # features_train and features_test are the features for the training
+    # and testing datasets, respectively
+    # labels_train and labels_test are the corresponding item labels
+    features_train, features_test, labels_train, labels_test = preprocess()
+
+    clf = DecisionTreeClassifier(min_samples_split=40)
+    clf.fit(features_train, labels_train)
+
+    prediction = clf.predict(features_test)
+
+    print("accuracy: {}".format(accuracy_score(prediction, labels_test)))
 
 
-
-
-#########################################################
-### your code goes here ###
-
-
-#########################################################
-
-
+if __name__ == "__main__":
+    predict_author_id()
