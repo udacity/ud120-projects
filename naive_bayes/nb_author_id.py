@@ -25,11 +25,11 @@ def predict_author_id():
 
     training_start = time()
     gnb.fit(features_train, labels_train)
-    print("training time: {}s".format(round(time()-training_start, 3)))
+    print("training time: {}s".format(round(time() - training_start, 3)))
 
     prediction_start = time()
     prediction = gnb.predict(features_test)
-    print("prediction time: {}s".format(round(time()-prediction_start, 3)))
+    print("prediction time: {}s".format(round(time() - prediction_start, 3)))
 
     print(accuracy_score(labels_test, prediction, normalize=True))
 

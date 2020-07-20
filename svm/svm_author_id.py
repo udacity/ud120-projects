@@ -7,7 +7,7 @@
     Sara has label 0
     Chris has label 1
 """
-    
+
 import sys
 from time import time
 
@@ -26,16 +26,22 @@ def predict_author_id():
     # features_train = features_train[:len(features_train)/100]
     # labels_train = labels_train[:len(labels_train)/100]
 
-    clf = svm.SVC(C=10000, kernel='rbf')
+    clf = svm.SVC(C=10000, kernel="rbf")
     clf.fit(features_train, labels_train)
 
     prediction = clf.predict(features_test)
 
-    print("accuracy: {}".format(accuracy_score(labels_test, prediction, normalize=True)))
+    print(
+        "accuracy: {}".format(accuracy_score(labels_test, prediction, normalize=True))
+    )
     print("prediction at position 10: {}".format(prediction[10]))
     print("prediction at position 26: {}".format(prediction[26]))
     print("prediction at position 50: {}".format(prediction[50]))
-    print("no. of results predicted to be Chris (1): {}".format(sum(map(lambda x: x == 1, prediction))))
+    print(
+        "no. of results predicted to be Chris (1): {}".format(
+            sum(map(lambda x: x == 1, prediction))
+        )
+    )
 
 
 if __name__ == "__main__":

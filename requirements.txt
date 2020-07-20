@@ -1,3 +1,4 @@
+matplotlib
 nltk==3.2.1
 numpy==1.11.2
 scikit-learn==0.18

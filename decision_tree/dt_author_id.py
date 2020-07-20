@@ -7,7 +7,7 @@
     Sara has label 0
     Chris has label 1
 """
-    
+
 import sys
 from time import time
 from sklearn.tree import DecisionTreeClassifier
