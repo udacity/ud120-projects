@@ -10,8 +10,8 @@ BASE_PATH = os.path.split(os.path.abspath(os.getcwd()))[0]
 
 
 def preprocess(
-        words_file=os.path.join(BASE_PATH, "tools/word_data.pkl"),
-        authors_file=os.path.join(BASE_PATH, "tools/email_authors.pkl")
+    words_file=os.path.join(BASE_PATH, "tools/word_data.pkl"),
+    authors_file=os.path.join(BASE_PATH, "tools/email_authors.pkl"),
 ):
     """ 
         this function takes a pre-made list of email texts (by default word_data.pkl)
@@ -46,20 +46,29 @@ def preprocess(
     )
 
     # text vectorization--go from strings to lists of numbers
-    vectorizer = TfidfVectorizer(sublinear_tf=True, max_df=0.5, stop_words='english')
+    vectorizer = TfidfVectorizer(sublinear_tf=True, max_df=0.5, stop_words="english")
     features_train_transformed = vectorizer.fit_transform(features_train)
     features_test_transformed = vectorizer.transform(features_test)
 
     # feature selection, because text is super high dimensional and
     # can be really computationally chewy as a result
-    selector = SelectPercentile(f_classif, percentile=1 )
+    selector = SelectPercentile(f_classif, percentile=1)
     selector.fit(features_train_transformed, labels_train)
-    features_train_transformed = selector.transform(features_train_transformed).toarray()
+    features_train_transformed = selector.transform(
+        features_train_transformed
+    ).toarray()
     features_test_transformed = selector.transform(features_test_transformed).toarray()
 
     # info on the data
     print("no. of Chris training emails: {}".format(sum(labels_train)))
-    print("no. of Sara training emails: {}".format(len(labels_train)-sum(labels_train)))
-    print("no. of features in data: {}". format(len(features_train_transformed[0])))
+    print(
+        "no. of Sara training emails: {}".format(len(labels_train) - sum(labels_train))
+    )
+    print("no. of features in data: {}".format(len(features_train_transformed[0])))
 
-    return features_train_transformed, features_test_transformed, labels_train, labels_test
+    return (
+        features_train_transformed,
+        features_test_transformed,
+        labels_train,
+        labels_test,
+    )
