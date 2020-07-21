@@ -2,7 +2,7 @@
 
 import matplotlib.pyplot as plt
 from prep_terrain_data import make_terrain_data
-from class_vis import pretty_picture
+from visualizer import pretty_picture
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
@@ -49,7 +49,7 @@ def make_prediction():
     plt.ylabel("grade")
     plt.show()
 
-    clf = RandomForestClassifier(min_samples_split=40)
+    clf = RandomForestClassifier(min_samples_split=50)
     # clf = AdaBoostClassifier(n_estimators=100, random_state=0)
     clf.fit(features_train, labels_train)
     prediction = clf.predict(features_test)
