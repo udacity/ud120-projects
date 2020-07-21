@@ -29,8 +29,6 @@
     label is the _first_ item in feature_list--very important
     that poi is listed first!
 """
-
-
 import numpy as np
 
 
