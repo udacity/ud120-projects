@@ -1,7 +1,7 @@
-ud120-projects solutions and updated python3 libraries (in progress)
-=================================================
+ud120-projects
+==============
 
-Starter project code for students taking Udacity ud120 (updated to Python3 )
+Starter project code for students taking Udacity ud120 (updated to Python3)
 
 Overview of changes:
 
@@ -14,9 +14,9 @@ Overview of changes:
 
 Software version numbers (2015-09-04):
 
-* Python: 3.7.5
+* Python: 3.4.3
 * GCC: 4.9.2
-* scikit-learn: 0.23.1.
-* nltk: 3.5.
-* numpy: 1.18.5.
-* matplotlib: 3.2.2.
+* scikit-learn: 0.16.1
+* nltk: 3.0.4
+* numpy: 1.9.2
+* matplotlib: 1.4.3
