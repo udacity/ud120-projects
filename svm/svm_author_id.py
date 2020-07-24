@@ -23,7 +23,6 @@ features_train, features_test, labels_train, labels_test = preprocess()
 
 ### make sure you use // when dividing for integer division
 
-
 #########################################################
 ### your code goes here ###
 
