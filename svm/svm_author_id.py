@@ -22,9 +22,16 @@ features_train, features_test, labels_train, labels_test = preprocess()
 
 
 
-#########################################################
-### your code goes here ###
-
-#########################################################
+from sklearn.svm import SVC
+t0=time()
+clf= SVC(Kernel="Linear")
+clf.fit(features_train, labels_train)
+print("classifying time:", time()-t0, "s")
+t0=time()
+pred= clf.predict(feature_test)
+print("Prediction time:", time()-t0, "s")
+from sklearn.mertics import accuracy_score
+acc= accuracy_score(pred, labels_train)
+print(acc)
 
 
