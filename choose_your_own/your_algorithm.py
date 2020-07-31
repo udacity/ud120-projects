@@ -30,7 +30,16 @@ plt.show()
 
 ### your code here!  name your classifier object clf if you want the 
 ### visualization code (prettyPicture) to show you the decision boundary
+# KNN
+clf_knn = KNeighborsClassifier(n_neighbors=4)
+clf_knn.fit(features_train, labels_train)
+pred_knn = clf_knn.predict(features_test)
+print( "Accuracy for KNeighborsClassifier:", accuracy_score(labels_test, pred_knn))
 
+clf_rf = RandomForestClassifier(n_estimators=15, min_samples_split=6)
+clf_rf.fit(features_train, labels_train)
+clf_rf = clf_rf.predict(features_test)
+print( "Accuracy RandomForestClassifier:", accuracy_score(labels_test, clf_rf))
 
 
 
