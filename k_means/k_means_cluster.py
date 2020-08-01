@@ -13,7 +13,8 @@ import matplotlib.pyplot as plt
 import sys
 sys.path.append("../tools/")
 from feature_format import featureFormat, targetFeatureSplit
-
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import MinMaxScaler
 
 
 
@@ -39,7 +40,11 @@ def Draw(pred, features, poi, mark_poi=False, name="image.png", f1_name="feature
 
 
 ### load in the dict of dicts containing all the data on each person in the dataset
-data_dict = pickle.load( open("../final_project/final_project_dataset.pkl", "r") )
+with open("../final_project/final_project_dataset.pkl", "rb") as f:
+    rawdataset = f.read()
+
+#data_dict = pickle.load( open("../final_project/final_project_dataset.pkl", "r") )
+data_dict = pickle.load( rawdataset)
 ### there's an outlier--remove it! 
 data_dict.pop("TOTAL", 0)
 
@@ -63,8 +68,13 @@ for f1, f2 in finance_features:
 plt.show()
 
 ### cluster here; create predictions of the cluster labels
-### for the data and store them to a list called pred
+est = KMeans(n_clusters=2)
 
+# fit/train it
+est.fit(finance_features)
+
+### for the data and store them to a list called pred
+pred = est.predict(finance_features)
 
 
 
@@ -73,4 +83,26 @@ plt.show()
 try:
     Draw(pred, finance_features, poi, mark_poi=False, name="clusters.pdf", f1_name=feature_1, f2_name=feature_2)
 except NameError:
-    print "no predictions object named pred found, no clusters to plot"
+    print( "no predictions object named pred found, no clusters to plot")
+
+
+salary = []
+exercised_stock_options = []
+for name in data_dict:
+    stock = data_dict[name]['exercised_stock_options']
+    sal = data_dict[name]['salary']
+    if not numpy.isnan(float(stock)):
+        exercised_stock_options.append(float(stock))
+    if not numpy.isnan(float(sal)):
+        salary.append(float(sal))
+
+#Feature rescaling
+scaler = MinMaxScaler()
+print( "After rescaling, salary $200,000:", scaler.fit_transform([[float(min(salary))], [200000], [float(max(salary))]]))
+print( "After rescaling,  salary $100,000:", scaler.fit_transform([[float(min(exercised_stock_options))], [1000000], [float(max(exercised_stock_options))]]))
+
+print( "Minimum stock :", min(exercised_stock_options))
+print( "Maximum stock :", max(exercised_stock_options))
+
+print( "Minimum salary :", min(salary))
+print( "Maximum salary :", max(salary))
