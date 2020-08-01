@@ -24,7 +24,23 @@ features_train, features_test, labels_train, labels_test = preprocess()
 
 #########################################################
 ### your code goes here ###
+#imports
+from sklearn import tree
+from sklearn.metrics import accuracy_score
+#
+# create classifer
+clf = tree.DecisionTreeClassifier(min_samples_split=40)
 
+# fit the classifier on  training features and labels
+clf.fit(features_train, labels_train)
+
+#predict
+pred = clf.predict(features_test)
+
+# print
+print( "Accuracy:", accuracy_score(labels_test, pred))
+
+print( "No of features in date:", len(features_train[0]))
 
 #########################################################
 
