@@ -54,9 +54,9 @@ target_names = lfw_people.target_names
 n_classes = target_names.shape[0]
 
 print( "Total dataset size:")
-print( "n_samples: %d" % n_samples)
-print( "n_features: %d" % n_features)
-print( "n_classes: %d" % n_classes)
+print("n_samples: {0}".format(n_samples))
+print("n_features: {0}".format(n_features))
+print("n_classes: {0}".format(n_classes))
 
 
 ###############################################################################
@@ -68,7 +68,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random
 # dataset): unsupervised feature extraction / dimensionality reduction
 n_components = 150
 
-print( "Extracting the top %d eigenfaces from %d faces" % (n_components, X_train.shape[0]))
+print("Extracting the top {0} eigenfaces from {1} faces".format(n_components, X_train.shape[0]))
 t0 = time()
 pca = RandomizedPCA(n_components=n_components, whiten=True).fit(X_train)
 print( "done in %0.3fs" % (time() - t0))
@@ -79,7 +79,7 @@ print( "Projecting the input data on the eigenfaces orthonormal basis")
 t0 = time()
 X_train_pca = pca.transform(X_train)
 X_test_pca = pca.transform(X_test)
-print( "done in %0.3fs" % (time() - t0))
+print("done in {0:.3f}s".format(time() - t0))
 
 
 ###############################################################################
@@ -94,7 +94,7 @@ param_grid = {
 # for sklearn version 0.16 or prior, the class_weight parameter value is 'auto'
 clf = GridSearchCV(SVC(kernel='rbf', class_weight='balanced'), param_grid)
 clf = clf.fit(X_train_pca, y_train)
-print( "done in %0.3fs" % (time() - t0))
+print("done in {0:.3f}s".format(time() - t0))
 print( "Best estimator found by grid search:")
 print( clf.best_estimator_)
 
@@ -105,7 +105,7 @@ print( clf.best_estimator_)
 print( "Predicting the people names on the testing set")
 t0 = time()
 y_pred = clf.predict(X_test_pca)
-print( "done in %0.3fs" % (time() - t0))
+print("done in {0:.3f}s".format(time() - t0))
 
 print( classification_report(y_test, y_pred, target_names=target_names))
 print( confusion_matrix(y_test, y_pred, labels=range(n_classes)))
