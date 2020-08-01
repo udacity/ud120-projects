@@ -37,10 +37,10 @@ print( "Prediction time:", round(time()-t1, 3), "s")
 
 print( "Accuracy score:", accuracy_score(labels_test, pred))
 
-print( "Predictions for 10:", pred[10], print "Predictions for 26:", pred[26], print "Predictions for 50:", pred[50])
+print( "Predictions for 10:", pred[10], print( "Predictions for 26:", pred[26], print( "Predictions for 50:", pred[50] ) ))
 
 c = Counter(pred)
-print "Number of predictions for Chris(1):", c[1]
+print( "Number of predictions for Chris(1):", c[1])
 #########################################################
 
 
