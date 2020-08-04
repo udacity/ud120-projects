@@ -15,7 +15,6 @@ The dataset used in this example is a preprocessed excerpt of the
 """
 
 
-
 print(__doc__)
 
 from time import time
@@ -32,7 +31,7 @@ from sklearn.decomposition import PCA
 from sklearn.svm import SVC
 
 # Display progress logs on stdout
-logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s')
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
 
 
 ###############################################################################
@@ -55,16 +54,18 @@ target_names = lfw_people.target_names
 n_classes = target_names.shape[0]
 
 print("Total dataset size:")
-print("n_samples: {0}".format(n_samples))
-print("n_features: {0}".format(n_features))
-print("n_classes: {0}".format(n_classes))
+print("n_samples:", n_samples)
+print("n_features:", n_features)
+print("n_classes:", n_classes)
 
 
 ###############################################################################
 # Split into a training set and a test set using a stratified k fold
 
 # split into a training and testing set
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.25, random_state=42
+)
 
 
 ###############################################################################
@@ -72,7 +73,11 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random
 # dataset): unsupervised feature extraction / dimensionality reduction
 n_components = 150
 
-print("Extracting the top {0} eigenfaces from {1} faces".format(n_components, X_train.shape[0]))
+print(
+    "Extracting the top {0} eigenfaces from {1} faces".format(
+        n_components, X_train.shape[0]
+    )
+)
 t0 = time()
 pca = PCA(n_components=n_components, whiten=True, svd_solver="randomized").fit(X_train)
 print("done in {0:.3f}s".format(time() - t0))
@@ -92,10 +97,10 @@ print("done in {0:.3f}s".format(time() - t0))
 print("Fitting the classifier to the training set")
 t0 = time()
 param_grid = {
-         'C': [1e3, 5e3, 1e4, 5e4, 1e5],
-          'gamma': [0.0001, 0.0005, 0.001, 0.005, 0.01, 0.1],
-          }
-clf = GridSearchCV(SVC(kernel='rbf', class_weight='auto'), param_grid)
+    "C": [1e3, 5e3, 1e4, 5e4, 1e5],
+    "gamma": [0.0001, 0.0005, 0.001, 0.005, 0.01, 0.1],
+}
+clf = GridSearchCV(SVC(kernel="rbf", class_weight="auto"), param_grid)
 clf = clf.fit(X_train_pca, y_train)
 print("done in {0:.3f}s".format(time() - t0))
 print("Best estimator found by grid search:")
@@ -117,10 +122,11 @@ print(confusion_matrix(y_test, y_pred, labels=range(n_classes)))
 ###############################################################################
 # Qualitative evaluation of the predictions using matplotlib
 
+
 def plot_gallery(images, titles, h, w, n_row=3, n_col=4):
     """Helper function to plot a gallery of portraits"""
     pl.figure(figsize=(1.8 * n_col, 2.4 * n_row))
-    pl.subplots_adjust(bottom=0, left=.01, right=.99, top=.90, hspace=.35)
+    pl.subplots_adjust(bottom=0, left=0.01, right=0.99, top=0.90, hspace=0.35)
     for i in range(n_row * n_col):
         pl.subplot(n_row, n_col, i + 1)
         pl.imshow(images[i].reshape((h, w)), cmap=pl.cm.gray)
@@ -131,19 +137,22 @@ def plot_gallery(images, titles, h, w, n_row=3, n_col=4):
 
 # plot the result of the prediction on a portion of the test set
 
-def title(y_pred, y_test, target_names, i):
-    pred_name = target_names[y_pred[i]].rsplit(' ', 1)[-1]
-    true_name = target_names[y_test[i]].rsplit(' ', 1)[-1]
-    return('predicted: {0}\ntrue:      {1}'.format(pred_name, true_name))
 
-prediction_titles = [title(y_pred, y_test, target_names, i)
-                         for i in range(y_pred.shape[0])]
+def title(y_pred, y_test, target_names, i):
+    pred_name = target_names[y_pred[i]].rsplit(" ", 1)[-1]
+    true_name = target_names[y_test[i]].rsplit(" ", 1)[-1]
+    return f"predicted: {pred_name}\ntrue:      {true_name}"
+
+
+prediction_titles = [
+    title(y_pred, y_test, target_names, i) for i in range(y_pred.shape[0])
+]
 
 plot_gallery(X_test, prediction_titles, h, w)
 
 # plot the gallery of the most significative eigenfaces
 
-eigenface_titles = ["eigenface %d" % i for i in range(eigenfaces.shape[0])]
+eigenface_titles = [f"eigenface {i}" for i in range(eigenfaces.shape[0])]
 plot_gallery(eigenfaces, eigenface_titles, h, w)
 
 pl.show()

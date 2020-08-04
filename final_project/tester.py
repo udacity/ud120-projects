@@ -15,6 +15,7 @@ import sys
 from sklearn.metrics import precision_score
 from sklearn.metrics import recall_score
 from sklearn.cross_validation import StratifiedShuffleSplit
+
 sys.path.append("../tools/")
 from feature_format import featureFormat, targetFeatureSplit
 
@@ -23,26 +24,27 @@ PERF_FORMAT_STRING = "\
 Recall: {:>0.{display_precision}f}\tF1: {:>0.{display_precision}f}\tF2: {:>0.{display_precision}f}"
 RESULTS_FORMAT_STRING = "\tTotal predictions: {:4d}\tTrue positives: {:4d}\tFalse positives: {:4d}\tFalse negatives: {:4d}\tTrue negatives: {:4d}"
 
-def test_classifier(clf, dataset, feature_list, folds = 1000):
-    data = featureFormat(dataset, feature_list, sort_keys = True)
+
+def test_classifier(clf, dataset, feature_list, folds=1000):
+    data = featureFormat(dataset, feature_list, sort_keys=True)
     labels, features = targetFeatureSplit(data)
-    cv = StratifiedShuffleSplit(labels, folds, random_state = 42)
+    cv = StratifiedShuffleSplit(labels, folds, random_state=42)
     true_negatives = 0
     false_negatives = 0
     true_positives = 0
     false_positives = 0
-    for train_idx, test_idx in cv: 
+    for train_idx, test_idx in cv:
         features_train = []
-        features_test  = []
-        labels_train   = []
-        labels_test    = []
+        features_test = []
+        labels_train = []
+        labels_test = []
         for ii in train_idx:
-            features_train.append( features[ii] )
-            labels_train.append( labels[ii] )
+            features_train.append(features[ii])
+            labels_train.append(labels[ii])
         for jj in test_idx:
-            features_test.append( features[jj] )
-            labels_test.append( labels[jj] )
-        
+            features_test.append(features[jj])
+            labels_test.append(labels[jj])
+
         ### fit the classifier using training set, and test on test set
         clf.fit(features_train, labels_train)
         predictions = clf.predict(features_test)
@@ -74,20 +76,24 @@ def test_classifier(clf, dataset, feature_list, folds = 1000):
     except:
         print("Got a divide by zero when trying out:", clf)
 
+
 CLF_PICKLE_FILENAME = "my_classifier.pkl"
 DATASET_PICKLE_FILENAME = "my_dataset.pkl"
 FEATURE_LIST_FILENAME = "my_feature_list.pkl"
 
+
 def dump_classifier_and_data(clf, dataset, feature_list):
-    pickle.dump(clf, open(CLF_PICKLE_FILENAME, "wb") )
-    pickle.dump(dataset, open(DATASET_PICKLE_FILENAME, "wb") )
-    pickle.dump(feature_list, open(FEATURE_LIST_FILENAME, "wb") )
+    pickle.dump(clf, open(CLF_PICKLE_FILENAME, "wb"))
+    pickle.dump(dataset, open(DATASET_PICKLE_FILENAME, "wb"))
+    pickle.dump(feature_list, open(FEATURE_LIST_FILENAME, "wb"))
+
 
 def load_classifier_and_data():
-    clf = pickle.load(open(CLF_PICKLE_FILENAME, "rb") )
-    dataset = pickle.load(open(DATASET_PICKLE_FILENAME, "rb") )
+    clf = pickle.load(open(CLF_PICKLE_FILENAME, "rb"))
+    dataset = pickle.load(open(DATASET_PICKLE_FILENAME, "rb"))
     feature_list = pickle.load(open(FEATURE_LIST_FILENAME, "rb"))
     return clf, dataset, feature_list
+
 
 def main():
     ### load up student's classifier, dataset, and feature_list
@@ -95,5 +101,6 @@ def main():
     ### Run testing script
     test_classifier(clf, dataset, feature_list)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

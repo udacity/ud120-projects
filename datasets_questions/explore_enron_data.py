@@ -17,6 +17,5 @@
 
 import pickle
 
-enron_data = pickle.load((open("../final_project/final_project_dataset.pkl", "rb")),fix_imports=True)
-
-
+file_path = "../final_project/final_project_dataset.pkl"
+enron_data = pickle.load(open(file_path, "rb"), fix_imports=True)
