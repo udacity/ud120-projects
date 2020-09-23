@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 """ 
     Starter code for exploring the Enron dataset (emails + finances);
@@ -15,8 +15,7 @@
     
 """
 
-import pickle
+import joblib
 
-enron_data = pickle.load(open("../final_project/final_project_dataset.pkl", "rb"))
-
+enron_data = joblib.load(open("../final_project/final_project_dataset.pkl", "rb"))
 
