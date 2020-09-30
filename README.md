@@ -1,4 +1,4 @@
-ud120-projects
+#Deep learning projects:
 ==============
 
-Starter project code for students taking Udacity ud120
+Amazing Starter project code for students taking Udacity ud120.
