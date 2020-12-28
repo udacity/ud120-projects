@@ -25,4 +25,4 @@ I offer no guarantees that will work or will be accepted by reviewers.
 
 If you find it useful and feel like buying me a coffee, the link is below.
 
-![bmc-button.png](https://www.buymeacoffee.com/oforero)
+[![Buy me a coffee](bmc-button.png)](https://www.buymeacoffee.com/oforero)
