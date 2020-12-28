@@ -2,6 +2,7 @@
 *.tgz
 *.gz
 *.csv
+*.bak
 
 maildir/
 images/
