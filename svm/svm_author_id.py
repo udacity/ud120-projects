@@ -23,8 +23,13 @@ features_train, features_test, labels_train, labels_test = preprocess()
 
 
 #########################################################
-### your code goes here ###
-
+### your code goes here
 #########################################################
+X = [features_train]
+y = [labels_train]
+clf = svm.SVC()
+clf.fit(X, y)
+SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0, degree=3, gamma=0.0, kernel='rbf', max_iter=-1, probability=False, random_state=None, shrinking=True, tol=0.001, verbose=False)
 
+clf.predict(features_test)
 
