@@ -16,7 +16,27 @@
 """
 
 import pickle
+import pandas as pd
 
-enron_data = pickle.load(open("../final_project/final_project_dataset.pkl", "rb"))
+original = "../final_project/final_project_dataset.pkl"
+destination = "word_data_unix.pkl"
 
 
+def unix_version(path_origin, path_dest):
+    content = ''
+    outsize = 0
+    with open(path_origin, 'rb') as infile:
+        content = infile.read()
+        with open(path_dest, 'wb') as output:
+            for line in content.splitlines():
+                outsize += len(line) + 1
+                output.write(line + str.encode('\n'))
+    return path_dest
+
+pickled_file = unix_version(original, destination)
+
+infile = open(pickled_file, "rb")
+enron_data = pickle.load(infile)
+
+df = pd.DataFrame(enron_data).T
+print(df)
