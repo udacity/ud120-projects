@@ -16,7 +16,7 @@ The dataset used in this example is a preprocessed excerpt of the
 
 
 
-print __doc__
+print(__doc__)
 
 from time import time
 import logging
