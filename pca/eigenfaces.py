@@ -25,10 +25,10 @@ import numpy as np
 
 from sklearn.model_selection import train_test_split
 from sklearn.datasets import fetch_lfw_people
-from sklearn.grid_search import GridSearchCV
+from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
-from sklearn.decomposition import RandomizedPCA
+from sklearn.decomposition import PCA as RandomizedPCA
 from sklearn.svm import SVC
 
 # Display progress logs on stdout
@@ -56,7 +56,7 @@ n_classes = target_names.shape[0]
 print("Total dataset size:")
 print("n_samples: %d" % n_samples)
 print("n_features: %d" % n_features)
-print("n_classes: %d" % n_classes)(
+print("n_classes: %d" % n_classes)
 
 ###############################################################################
 # Split into a training and testing set
