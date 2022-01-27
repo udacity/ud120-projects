@@ -4,8 +4,9 @@ import os
 import joblib
 import re
 import sys
+import os
 
-sys.path.append( "../tools/" )
+sys.path.append(os.path.abspath("../tools/"))
 from parse_out_email_text import parseOutText
 
 """
