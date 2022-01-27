@@ -55,7 +55,7 @@ n_classes = target_names.shape[0]
 print("Total dataset size:")
 print("n_samples: %d" % n_samples)
 print("n_features: %d" % n_features)
-print("n_classes: %d" % n_classes)(
+print("n_classes: %d" % n_classes)
 
 ###############################################################################
 # Split into a training and testing set
@@ -85,7 +85,7 @@ print("done in %0.3fs" % (time() - t0))
 print("Fitting the classifier to the training set")
 t0 = time()
 param_grid = {
-         'C': [1e3, 5e3, 1e4, 5e4, 1e5],
+          'C': [1e3, 5e3, 1e4, 5e4, 1e5],
           'gamma': [0.0001, 0.0005, 0.001, 0.005, 0.01, 0.1],
           }
 # for sklearn version 0.16 or prior, the class_weight parameter value is 'auto'
@@ -131,7 +131,7 @@ def title(y_pred, y_test, target_names, i):
     return 'predicted: %s\ntrue:      %s' % (pred_name, true_name)
 
 prediction_titles = [title(y_pred, y_test, target_names, i)
-                         for i in range(y_pred.shape[0])]
+                      for i in range(y_pred.shape[0])]
 
 plot_gallery(X_test, prediction_titles, h, w)
 
