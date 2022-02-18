@@ -10,3 +10,5 @@ my_dataset.pkl
 my_feature_list.pkl
 .DS_Store
 __pycache__
+enron_mail_20150507.tar.gz
+tools/.vscode/settings.json

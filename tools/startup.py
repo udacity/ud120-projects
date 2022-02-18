@@ -33,7 +33,7 @@ import requests
 url = "https://www.cs.cmu.edu/~./enron/enron_mail_20150507.tar.gz"
 filename = "../enron_mail_20150507.tar.gz"
 with open(filename, "wb") as f:
-    r = requests.get(url)
+    r = requests.get(url, verify=False)
     f.write(r.content)
 print("Download Complete!")
 
