@@ -4,16 +4,13 @@
     Skeleton code for k-means clustering mini-project.
 """
 
-
+import os
 import joblib
 import numpy
 import matplotlib.pyplot as plt
 import sys
-sys.path.append("../tools/")
+sys.path.append(os.path.abspath("../tools/"))
 from feature_format import featureFormat, targetFeatureSplit
-
-
-
 
 def Draw(pred, features, poi, mark_poi=False, name="image.png", f1_name="feature 1", f2_name="feature 2"):
     """ some plotting code designed to help you visualize your clusters """

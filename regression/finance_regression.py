@@ -12,10 +12,10 @@
     You fill in the regression code where indicated:
 """    
 
-
+import os
 import sys
 import joblib
-sys.path.append("../tools/")
+sys.path.append(os.path.abspath("../tools/"))
 from feature_format import featureFormat, targetFeatureSplit
 dictionary = joblib.load( open("../final_project/final_project_dataset_modified.pkl", "rb") )
 

@@ -1,9 +1,9 @@
 #!/usr/bin/python3
-
+import os
 import joblib
 import sys
 import matplotlib.pyplot
-sys.path.append("../tools/")
+sys.path.append(os.path.abspath("../tools/"))
 from feature_format import featureFormat, targetFeatureSplit
 
 

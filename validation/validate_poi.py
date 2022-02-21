@@ -9,10 +9,10 @@
 
     After that, it's not our code anymore--it's yours!
 """
-
+import os
 import joblib
 import sys
-sys.path.append("../tools/")
+sys.path.append(os.path.abspath("../tools/"))
 from feature_format import featureFormat, targetFeatureSplit
 
 data_dict = joblib.load(open("../final_project/final_project_dataset.pkl", "rb") )
