@@ -9,8 +9,8 @@ from outlier_cleaner import outlierCleaner
 
 
 ### load up some practice data with outliers in it
-ages = joblib.load( open("practice_outliers_ages.pkl", "rb") )
-net_worths = joblib.load( open("practice_outliers_net_worths.pkl", "rb") )
+ages = joblib.load( open("./outliers/practice_outliers_ages.pkl", "rb") )
+net_worths = joblib.load( open("./outliers/practice_outliers_net_worths.pkl", "rb") )
 
 
 
