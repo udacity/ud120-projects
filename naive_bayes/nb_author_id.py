@@ -12,9 +12,10 @@
     
 import sys
 from time import time
-sys.path.append("../tools/")
+sys.path.append("/Users/darpan/Desktop/ud120-projects/tools/")
 from email_preprocess import preprocess
-
+from sklearn.naive_bayes import GaussianNB
+from sklearn import metrics
 
 ### features_train and features_test are the features for the training
 ### and testing datasets, respectively
@@ -24,7 +25,19 @@ features_train, features_test, labels_train, labels_test = preprocess()
 
 ##############################################################
 # Enter Your Code Here
+clfier  = GaussianNB()
+t0 = time()
+clfier.fit(features_train, labels_train)
+print("training time:", round(time()-t0, 3), "s")
 
+
+t0 = time()
+pred = clfier.predict(features_test)
+print("Prediction time:", round(time()-t0, 3), "s")
+
+
+
+print("Accuracy:", metrics.accuracy_score(labels_test, pred))
 
 
 ##############################################################
