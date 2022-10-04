@@ -10,3 +10,4 @@ my_dataset.pkl
 my_feature_list.pkl
 .DS_Store
 __pycache__
+venv/
