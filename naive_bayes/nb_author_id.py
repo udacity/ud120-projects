@@ -20,6 +20,14 @@ from email_preprocess import preprocess
 ### and testing datasets, respectively
 ### labels_train and labels_test are the corresponding item labels
 features_train, features_test, labels_train, labels_test = preprocess()
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import accuracy_score
+clf=GaussianNB()
+clf.fit(features_train,label_train)
+pred=clf.predict(features_test)
+accuracy = accuracy_score(pred,label_test)
+print("Accuracy is : " + accuracy)
+
 
 
 ##############################################################
