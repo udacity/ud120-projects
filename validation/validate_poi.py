@@ -9,13 +9,13 @@
 
     After that, it's not our code anymore--it's yours!
 """
-
-import pickle
+import os
+import joblib
 import sys
-sys.path.append("../tools/")
+sys.path.append(os.path.abspath("../tools/"))
 from feature_format import featureFormat, targetFeatureSplit
 
-data_dict = pickle.load(open("../final_project/final_project_dataset.pkl", "r") )
+data_dict = joblib.load(open("../final_project/final_project_dataset.pkl", "rb") )
 
 ### first element is our labels, any added elements are predictor
 ### features. Keep this the same for the mini-project, but you'll

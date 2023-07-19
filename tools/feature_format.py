@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 """ 
     A general tool for converting data from the
@@ -54,8 +54,8 @@ def featureFormat( dictionary, features, remove_NaN=True, remove_all_zeroes=True
     # Key order - first branch is for Python 3 compatibility on mini-projects,
     # second branch is for compatibility on final project.
     if isinstance(sort_keys, str):
-        import pickle
-        keys = pickle.load(open(sort_keys, "rb"))
+        import joblib
+        keys = joblib.load(open(sort_keys, "rb"))
     elif sort_keys:
         keys = sorted(dictionary.keys())
     else:
@@ -67,10 +67,10 @@ def featureFormat( dictionary, features, remove_NaN=True, remove_all_zeroes=True
             try:
                 dictionary[key][feature]
             except KeyError:
-                print "error: key ", feature, " not present"
+                print("Error: Key ", feature, " Not Present")
                 return
             value = dictionary[key][feature]
-            if value=="NaN" and remove_NaN:
+            if value == 'NaN' and remove_NaN:
                 value = 0
             tmp_list.append( float(value) )
 
@@ -86,14 +86,14 @@ def featureFormat( dictionary, features, remove_NaN=True, remove_all_zeroes=True
         if remove_all_zeroes:
             append = False
             for item in test_list:
-                if item != 0 and item != "NaN":
+                if item != 0 and item != 'NaN':
                     append = True
                     break
         ### if any features for a given data point are zero
         ### and you want to remove data points with any zeroes,
         ### handle that here
         if remove_any_zeroes:
-            if 0 in test_list or "NaN" in test_list:
+            if 0 in test_list or 'NaN' in test_list:
                 append = False
         ### Append the data point if flagged for addition.
         if append:
