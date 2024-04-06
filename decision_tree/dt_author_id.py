@@ -10,7 +10,7 @@
     
 import sys
 from time import time
-sys.path.append("../tools/")
+sys.path.append("./tools/")
 from email_preprocess import preprocess
 
 
@@ -41,4 +41,46 @@ accuracy = clf.score(features_test, labels_test)
 acc = accuracy_score(pred, labels_test)
 
 print("Accuracy:", round(accuracy,3))
+print("Metrics Accuracy:", round(acc, 3))
+
+#########################################################
+
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.metrics import accuracy_score
+
+# Create a AdaBoost Classifier (AB) object
+t0 = time()
+clf = AdaBoostClassifier(n_estimators=100, random_state=0)
+clf.fit(features_train, labels_train)
+print("Training Time:", round(time()-t0, 3), "s")
+
+acc = accuracy_score(clf.predict(features_test), labels_test)
+
+print("Metrics Accuracy:", round(acc, 3))
+
+
+#########################################################
+from sklearn.neighbors import KNeighborsClassifier
+
+# Create a KNeighbors Classifier (KNN) object
+t0 = time()
+clf = KNeighborsClassifier(n_neighbors=3)
+clf.fit(features_train, labels_train)
+print("Training Time:", round(time()-t0, 3), "s")
+
+acc = accuracy_score(clf.predict(features_test), labels_test)
+print("Metrics Accuracy:", round(acc, 3))
+
+
+#########################################################
+
+from sklearn.ensemble import RandomForestClassifier
+
+# Create a RandomForest Classifier (RF) object
+t0 = time()
+clf = RandomForestClassifier(n_estimators=100, random_state=0)
+clf.fit(features_train, labels_train)
+print("Training Time:", round(time()-t0, 3), "s")
+
+acc = accuracy_score(clf.predict(features_test), labels_test)
 print("Metrics Accuracy:", round(acc, 3))
