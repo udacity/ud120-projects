@@ -68,7 +68,7 @@ jeffrey_skillin_name = [name for name in names_enron_data if 'jeffrey' in name.l
 print(f"The value of stock options belonging to Jeffrey K Skillin: {enron_data[jeffrey_skillin_name[0]]['exercised_stock_options']}")
 
 # Print the  value of total payments to Lay, Skilling and Fastow
-Lay_Skilling_Fastow_names = [name for name in names_enron_data if 'jeffrey' in name.lower() and 'lay' in name.lower() and 'fastow' in name.lower()]
+Lay_Skilling_Fastow_names = [name for name in names_enron_data if 'jeffrey' in name.lower() or 'lay' in name.lower() or 'fastow' in name.lower()]
 print(f"Name of the person: {Lay_Skilling_Fastow_names}")
 
 # Print the value of stock options belonging to Jeffrey K Skillin
