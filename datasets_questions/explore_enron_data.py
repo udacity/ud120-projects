@@ -75,3 +75,14 @@ total_payments = {name: enron_data[name]['total_payments'] for name in Lay_Skill
 # Print the name of the person with the highest total payments
 max_total_payments = max(total_payments, key=total_payments.get)
 print(f"Name of the person with the highest total payments: {max_total_payments}")
+ 
+# Print the number of people with a quantified salary
+people_with_quantified_salary = [person for person in enron_data.values() if person['salary'] != 'NaN']
+people_with_known_emails = [person for person in enron_data.values() if person['email_address'] != 'NaN']
+
+print(f'number of persons with known salarry:', len(people_with_quantified_salary))
+print(f'number of persons with known emails:', len(people_with_known_emails))
+
+sys.path.append("./tools/")
+from feature_format import featureFormat
+enron_data_array = featureFormat(enron_data, first_person_features)
