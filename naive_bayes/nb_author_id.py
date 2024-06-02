@@ -20,6 +20,12 @@ from email_preprocess import preprocess
 ### and testing datasets, respectively
 ### labels_train and labels_test are the corresponding item labels
 features_train, features_test, labels_train, labels_test = preprocess()
+from email_preprocess import accuracy_score
+clf=preprocess()
+clf.fit(features_train,label_train)
+pred=clf.predict(features_test)
+print accuracy_score(pred,label_test)
+
 
 
 ##############################################################
