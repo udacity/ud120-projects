@@ -20,7 +20,7 @@ print(__doc__)
 
 from time import time
 import logging
-import pylab as pl
+import matplotlib.pylab as pl
 import numpy as np
 
 from sklearn.model_selection import train_test_split, GridSearchCV
