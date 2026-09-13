@@ -1,11 +1,12 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import os
-import pickle
+import joblib
 import re
 import sys
+import os
 
-sys.path.append( "../tools/" )
+sys.path.append(os.path.abspath("../tools/"))
 from parse_out_email_text import parseOutText
 
 """
@@ -43,33 +44,31 @@ for name, from_person in [("sara", from_sara), ("chris", from_chris)]:
         ### once everything is working, remove this line to run over full dataset
         temp_counter += 1
         if temp_counter < 200:
-            path = os.path.join('..', path[:-1])
-            print path
-            email = open(path, "r")
+	        path = os.path.join('..', path[:-1])
+	        print(path)
+	        email = open(path, "r")
 
-            ### use parseOutText to extract the text from the opened email
-
-            ### use str.replace() to remove any instances of the words
-            ### ["sara", "shackleton", "chris", "germani"]
-
-            ### append the text to word_data
-
-            ### append a 0 to from_data if email is from Sara, and 1 if email is from Chris
+	        ### use parseOutText to extract the text from the opened email
 
 
-            email.close()
+	        ### use str.replace() to remove any instances of the words
+	        ### ["sara", "shackleton", "chris", "germani"]
 
-print "emails processed"
+
+	        ### append the text to word_data
+
+
+	        ### append a 0 to from_data if email is from Sara, and 1 if email is from Chris
+
+
+	        email.close()
+
+print("Emails Processed")
 from_sara.close()
 from_chris.close()
 
-pickle.dump( word_data, open("your_word_data.pkl", "w") )
-pickle.dump( from_data, open("your_email_authors.pkl", "w") )
-
-
-
+joblib.dump( word_data, open("your_word_data.pkl", "wb") )
+joblib.dump( from_data, open("your_email_authors.pkl", "wb") )
 
 
 ### in Part 4, do TfIdf vectorization here
-
-
